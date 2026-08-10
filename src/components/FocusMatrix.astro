@@ -1,0 +1,167 @@
+---
+import type { Locale } from '../config/site';
+import SectionHeader from './SectionHeader.astro';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const copy =
+  locale === 'es'
+    ? {
+        eyebrow: 'Perfil / intersección',
+        title: 'Pensamiento empresarial con criterio técnico.',
+        description:
+          'Mi trabajo combina lectura del negocio, disciplina analítica y capacidad de implementación.',
+        areas: [
+          {
+            code: 'DAT.01',
+            title: 'Datos & BI',
+            text: 'Limpieza, modelado, KPI, visualización y comunicación ejecutiva.',
+          },
+          {
+            code: 'PRC.02',
+            title: 'Procesos & consultoría',
+            text: 'Diagnóstico, priorización, escenarios y propuestas accionables.',
+          },
+          {
+            code: 'SYS.03',
+            title: 'Sistemas',
+            text: 'Aplicaciones que conectan flujos operativos, información y usuarios.',
+          },
+        ],
+      }
+    : {
+        eyebrow: 'Profile / intersection',
+        title: 'Business thinking with technical judgment.',
+        description:
+          'My work combines business understanding, analytical discipline, and implementation skills.',
+        areas: [
+          {
+            code: 'DAT.01',
+            title: 'Data & BI',
+            text: 'Cleaning, modeling, KPIs, visualization, and executive communication.',
+          },
+          {
+            code: 'PRC.02',
+            title: 'Processes & consulting',
+            text: 'Diagnosis, prioritization, scenarios, and actionable proposals.',
+          },
+          {
+            code: 'SYS.03',
+            title: 'Systems',
+            text: 'Applications connecting operational workflows, information, and users.',
+          },
+        ],
+      };
+---
+
+<section class="focus-matrix">
+  <div class="container">
+    <SectionHeader eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
+    <div class="focus-matrix__grid">
+      {
+        copy.areas.map((area, index) => (
+          <article>
+            <div class="focus-matrix__topline">
+              <>
+                <span>{area.code}</span>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+              </>
+            </div>
+            <div class="focus-matrix__glyph" aria-hidden="true">
+              <>
+                <span />
+                <span />
+              </>
+            </div>
+            <h3>{area.title}</h3>
+            <p>{area.text}</p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .focus-matrix {
+    padding-block: clamp(5rem, 10vw, 9rem);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .focus-matrix__grid {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  article {
+    min-height: 24rem;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.4rem, 3vw, 2rem);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(145deg, var(--color-glow), transparent 35%), var(--color-surface);
+  }
+
+  .focus-matrix__topline {
+    display: flex;
+    justify-content: space-between;
+    color: var(--color-accent-strong);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+  }
+
+  .focus-matrix__glyph {
+    position: relative;
+    width: 8rem;
+    margin-block: auto;
+    aspect-ratio: 1;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, var(--color-glow), transparent 62%);
+  }
+
+  .focus-matrix__glyph::before,
+  .focus-matrix__glyph::after,
+  .focus-matrix__glyph span {
+    content: '';
+    position: absolute;
+    inset: 20%;
+    border: 1px solid var(--color-line);
+    transform: rotate(45deg);
+  }
+
+  .focus-matrix__glyph::after {
+    inset: 38%;
+    border-color: var(--color-accent);
+  }
+  .focus-matrix__glyph span:first-child {
+    inset: 10% 48%;
+    transform: none;
+    background: var(--color-line);
+  }
+  .focus-matrix__glyph span:last-child {
+    inset: 48% 10%;
+    transform: none;
+    background: var(--color-line);
+  }
+
+  h3 {
+    margin: 0 0 var(--space-3);
+    font-size: clamp(1.7rem, 3vw, 2.45rem);
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  @media (min-width: 56rem) {
+    .focus-matrix__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

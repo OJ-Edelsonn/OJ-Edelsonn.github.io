@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import ProjectCatalog from '../../../components/ProjectCatalog.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const projects = (
+  await getCollection('projects', ({ data }) => data.locale === 'es' && !data.draft)
+).sort((a, b) => a.data.priority - b.data.priority);
+---
+
+<BaseLayout
+  locale="es"
+  routeKey="projects"
+  title="Proyectos — Edelson Orihuela"
+  description="Proyectos personales y académicos de datos, BI, procesos, consultoría y sistemas."
+>
+  <ProjectCatalog locale="es" projects={projects} />
+</BaseLayout>

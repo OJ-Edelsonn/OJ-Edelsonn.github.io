@@ -1,0 +1,83 @@
+<div class="system-backdrop" aria-hidden="true">
+  <div class="system-backdrop__grid"></div>
+  <div class="system-backdrop__beam"></div>
+  <div class="system-backdrop__orb system-backdrop__orb--one"></div>
+  <div class="system-backdrop__orb system-backdrop__orb--two"></div>
+</div>
+
+<style>
+  .system-backdrop {
+    position: fixed;
+    z-index: -1;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    background:
+      linear-gradient(135deg, transparent 0 49.8%, var(--color-line) 50%, transparent 50.2%) 0 0 /
+        11rem 11rem,
+      radial-gradient(circle at 72% 18%, var(--color-glow), transparent 32rem),
+      var(--color-background);
+  }
+
+  .system-backdrop__grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.38;
+    background-image:
+      linear-gradient(var(--color-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
+    background-size: 4rem 4rem;
+    mask-image: linear-gradient(to bottom, black, transparent 90%);
+  }
+
+  .system-backdrop__beam {
+    position: absolute;
+    top: -45vh;
+    left: 58%;
+    width: 1px;
+    height: 140vh;
+    transform: rotate(24deg);
+    transform-origin: bottom;
+    background: linear-gradient(transparent, var(--blue-400), transparent);
+    box-shadow: 0 0 2.5rem var(--blue-500);
+    opacity: 0.55;
+    animation: signal-scan 11s ease-in-out infinite alternate;
+  }
+
+  .system-backdrop__orb {
+    position: absolute;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 50%;
+    box-shadow: inset 0 0 5rem var(--color-glow);
+  }
+
+  .system-backdrop__orb::after {
+    content: '';
+    position: absolute;
+    inset: 13%;
+    border: 1px dashed var(--color-line);
+    border-radius: inherit;
+  }
+
+  .system-backdrop__orb--one {
+    top: 12%;
+    right: -12rem;
+    width: 32rem;
+    aspect-ratio: 1;
+  }
+
+  .system-backdrop__orb--two {
+    bottom: -10rem;
+    left: -8rem;
+    width: 21rem;
+    aspect-ratio: 1;
+    opacity: 0.45;
+  }
+
+  @keyframes signal-scan {
+    to {
+      transform: translateX(8vw) rotate(24deg);
+      opacity: 0.25;
+    }
+  }
+</style>

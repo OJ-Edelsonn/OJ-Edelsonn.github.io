@@ -1,0 +1,27 @@
+---
+import FoundationHero from '../../components/FoundationHero.astro';
+import FocusMatrix from '../../components/FocusMatrix.astro';
+import HomeCTA from '../../components/HomeCTA.astro';
+import HomeProjects from '../../components/HomeProjects.astro';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const projects = (
+  await getCollection(
+    'projects',
+    ({ data }) => data.locale === 'en' && data.featured && !data.draft,
+  )
+).sort((a, b) => a.data.priority - b.data.priority);
+---
+
+<BaseLayout
+  locale="en"
+  routeKey="home"
+  title="Edelson Orihuela — Data, processes, and systems"
+  description="Professional portfolio of Edelson Anghuelo Orihuela Jara, a Business and Systems Engineering student focused on data, BI, processes, and consulting."
+>
+  <FoundationHero locale="en" />
+  <HomeProjects locale="en" projects={projects} />
+  <FocusMatrix locale="en" />
+  <HomeCTA locale="en" />
+</BaseLayout>

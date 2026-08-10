@@ -1,0 +1,244 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { Locale } from '../config/site';
+import { getRoute, withBase } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+  posts: CollectionEntry<'posts'>[];
+}
+const { locale, posts } = Astro.props;
+const copy =
+  locale === 'es'
+    ? {
+        eyebrow: 'Cuaderno / contenido responsable',
+        title: 'Publicaciones',
+        intro:
+          'Todavía no hay artículos publicados. Este espacio conserva únicamente propuestas editoriales como borradores no públicos hasta que su contenido sea revisado y aprobado.',
+        state: '0 artículos publicados',
+        draft: 'Borrador editorial · no publicado',
+        direction: 'Líneas editoriales',
+        directionText:
+          'Las futuras publicaciones convertirán aprendizajes reales de los proyectos en notas breves, verificables y útiles para otros estudiantes o equipos.',
+        criteria: [
+          'Partir de un proyecto o fuente real',
+          'Separar evidencia, interpretación y limitaciones',
+          'Evitar métricas o conclusiones sin respaldo',
+          'Publicar solo después de revisión expresa',
+        ],
+        contact: 'Proponer una conversación',
+      }
+    : {
+        eyebrow: 'Notebook / responsible content',
+        title: 'Insights',
+        intro:
+          'No articles are published yet. This space preserves editorial proposals only as non-public drafts until their content is reviewed and approved.',
+        state: '0 published articles',
+        draft: 'Editorial draft · not published',
+        direction: 'Editorial direction',
+        directionText:
+          'Future posts will turn real project learning into short, verifiable notes that are useful to other students or teams.',
+        criteria: [
+          'Start from a real project or source',
+          'Separate evidence, interpretation, and limitations',
+          'Avoid unsupported metrics or conclusions',
+          'Publish only after explicit review',
+        ],
+        contact: 'Start a conversation',
+      };
+---
+
+<article class="insights">
+  <header class="insights-hero">
+    <div class="container insights-hero__grid">
+      <div><p class="eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1></div>
+      <div><p>{copy.intro}</p><span>{copy.state}</span></div>
+    </div>
+  </header>
+
+  <section class="drafts">
+    <div class="container drafts__grid">
+      {
+        posts.map((post, index) => (
+          <article class="draft-card">
+            <div class="draft-card__meta">
+              <>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <span>{copy.draft}</span>
+              </>
+            </div>
+            <h2>{post.data.title}</h2>
+            <p>{post.data.summary}</p>
+            <ul aria-label={locale === 'es' ? 'Etiquetas' : 'Tags'}>
+              {post.data.tags.map((tag) => (
+                <li>{tag}</li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="editorial">
+    <div class="container editorial__panel">
+      <div>
+        <p class="eyebrow">01 / {copy.direction}</p><h2>{copy.direction}</h2><p>
+          {copy.directionText}
+        </p>
+      </div>
+      <ol>
+        {
+          copy.criteria.map((item, index) => (
+            <li>
+              <>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <p>{item}</p>
+              </>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <div class="container insights-action">
+    <a class="button button--primary" href={withBase(getRoute('contact', locale))}
+      >{copy.contact}<span aria-hidden="true">↗</span></a
+    >
+  </div>
+</article>
+
+<style>
+  .insights-hero {
+    padding-block: clamp(5rem, 10vw, 9rem);
+  }
+  .insights-hero__grid {
+    display: grid;
+    gap: var(--space-8);
+    align-items: end;
+  }
+  .insights-hero__grid > * {
+    min-width: 0;
+  }
+  h1 {
+    margin: 1rem 0 0;
+    font-size: clamp(3.2rem, 10vw, 9rem);
+  }
+  .insights-hero__grid > div:last-child p {
+    max-width: 42rem;
+    color: var(--color-text-muted);
+    font-size: 1.08rem;
+  }
+  .insights-hero__grid > div:last-child span {
+    color: var(--color-accent-strong);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .drafts {
+    padding-block: clamp(4rem, 9vw, 8rem);
+    border-block: 1px solid var(--color-line);
+  }
+  .drafts__grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+  .draft-card {
+    padding: clamp(1.5rem, 4vw, 2.8rem);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+  }
+  .draft-card__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    color: var(--color-accent-strong);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .draft-card h2 {
+    margin: clamp(2rem, 5vw, 4rem) 0 var(--space-4);
+    font-size: clamp(2rem, 4vw, 3.4rem);
+  }
+  .draft-card > p {
+    color: var(--color-text-muted);
+  }
+  .draft-card ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: var(--space-6) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .draft-card li {
+    padding: 0.3rem 0.55rem;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+  }
+  .editorial {
+    padding-block: clamp(4rem, 9vw, 8rem);
+  }
+  .editorial__panel {
+    display: grid;
+    gap: var(--space-8);
+    padding: clamp(1.5rem, 5vw, 4rem);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(130deg, var(--color-glow), transparent 60%), var(--color-surface);
+  }
+  .editorial h2 {
+    margin: var(--space-4) 0;
+    font-size: clamp(2.2rem, 5vw, 4.5rem);
+  }
+  .editorial__panel > div > p:last-child {
+    max-width: 35rem;
+    color: var(--color-text-muted);
+  }
+  ol {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--color-line);
+    list-style: none;
+  }
+  ol li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-4);
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--color-line);
+  }
+  ol span {
+    color: var(--color-accent-strong);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+  }
+  ol p {
+    margin: 0;
+  }
+  .insights-action {
+    padding-bottom: clamp(5rem, 10vw, 9rem);
+  }
+  @media (min-width: 52rem) {
+    .insights-hero__grid {
+      grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.85fr);
+    }
+    .drafts__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .draft-card:first-child {
+      grid-column: span 2;
+    }
+    .editorial__panel {
+      grid-template-columns: minmax(0, 1fr) minmax(22rem, 1fr);
+    }
+  }
+</style>

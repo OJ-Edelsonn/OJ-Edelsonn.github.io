@@ -1,0 +1,432 @@
+---
+import type { Locale } from '../config/site';
+import { getRoute, withBase } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const copy =
+  locale === 'es'
+    ? {
+        eyebrow: 'Perfil / conexión interdisciplinaria',
+        title: 'Ingeniería para convertir información en decisiones y sistemas útiles.',
+        intro:
+          'Soy Edelson Anghuelo Orihuela Jara, estudiante de séptimo ciclo de Ingeniería Empresarial y de Sistemas. Mi perfil conecta análisis de datos, inteligencia de negocio, procesos y desarrollo de sistemas con una lectura práctica de las operaciones.',
+        signal:
+          'Busco prácticas preprofesionales en Análisis de Datos, BI, Inteligencia Comercial, consultoría, planeamiento, operaciones y transformación digital.',
+        focusTitle: 'Dirección profesional',
+        focusText:
+          'Me interesa trabajar en problemas donde sea necesario ordenar datos, entender un proceso y presentar una respuesta clara para decidir o ejecutar. El portafolio muestra ese recorrido desde SQL y Power BI hasta aplicaciones web y análisis de negocio.',
+        educationTitle: 'Formación',
+        education: [
+          {
+            period: '2023 — actualidad',
+            title: 'Ingeniería Empresarial y de Sistemas',
+            detail: 'Universidad Científica del Sur · Séptimo ciclo · Lima, Perú',
+          },
+          {
+            period: '2018',
+            title: 'Programa del Diploma del Bachillerato Internacional',
+            detail: 'COAR Junín',
+          },
+          { period: '2018', title: 'Cambridge English B1', detail: 'COAR Junín' },
+        ],
+        pathTitle: 'Trayectoria aplicada',
+        pathText:
+          'La cercanía con una ferretería familiar aporta contexto real sobre ventas, inventario, atención y digitalización. En este portafolio esa experiencia se presenta como marco de aprendizaje y construcción de soluciones, sin atribuir métricas comerciales no documentadas.',
+        skillsTitle: 'Capacidades verificables',
+        skills: [
+          {
+            code: '01',
+            title: 'Datos & BI',
+            items: [
+              'Power BI Desktop',
+              'Power Query y DAX básicos',
+              'SQL Server, T-SQL y MySQL',
+              'Modelamiento relacional y estrella',
+              'Limpieza, transformación y validación',
+            ],
+          },
+          {
+            code: '02',
+            title: 'Python & análisis',
+            items: [
+              'Python aplicado a datos',
+              'pandas y NumPy',
+              'Jupyter',
+              'Matplotlib y Seaborn',
+              'Automatización con openpyxl',
+            ],
+          },
+          {
+            code: '03',
+            title: 'Sistemas',
+            items: [
+              'Java y Spring Boot por proyectos',
+              'PHP, HTML, CSS y JavaScript',
+              'Thymeleaf, JSP y Bootstrap',
+              'Git y GitHub',
+              'Arquitectura MVC y persistencia relacional',
+            ],
+          },
+          {
+            code: '04',
+            title: 'Negocio & procesos',
+            items: [
+              'Indicadores comerciales y operativos',
+              'Procesos, logística e inventarios',
+              'Finanzas y contabilidad académicas',
+              'Análisis competitivo',
+              'Comunicación ejecutiva de hallazgos',
+            ],
+          },
+        ],
+        languageTitle: 'Idiomas',
+        languages: [
+          'Español · nativo',
+          'Inglés · intermedio, Cambridge B1 (2018)',
+          'Portugués · básico',
+        ],
+        principleTitle: 'Principio de trabajo',
+        principle:
+          'Prefiero una solución trazable y bien explicada a una afirmación espectacular sin evidencia. Por eso cada caso separa resultados verificables, datos simulados y limitaciones.',
+        projects: 'Explorar proyectos',
+        resume: 'Ver CV',
+      }
+    : {
+        eyebrow: 'Profile / interdisciplinary connection',
+        title: 'Engineering to turn information into decisions and useful systems.',
+        intro:
+          'I am Edelson Anghuelo Orihuela Jara, a seventh-semester Business and Systems Engineering student. My profile connects data analytics, business intelligence, processes, and systems development with a practical view of operations.',
+        signal:
+          'I am seeking pre-professional internships in Data Analytics, BI, Commercial Intelligence, consulting, planning, operations, and digital transformation.',
+        focusTitle: 'Professional direction',
+        focusText:
+          'I am interested in problems that require organizing data, understanding a process, and presenting a clear answer for decision-making or execution. This portfolio shows that path from SQL and Power BI to web applications and business analysis.',
+        educationTitle: 'Education',
+        education: [
+          {
+            period: '2023 — present',
+            title: 'Business and Systems Engineering',
+            detail: 'Universidad Científica del Sur · Seventh semester · Lima, Peru',
+          },
+          {
+            period: '2018',
+            title: 'International Baccalaureate Diploma Programme',
+            detail: 'COAR Junín',
+          },
+          { period: '2018', title: 'Cambridge English B1', detail: 'COAR Junín' },
+        ],
+        pathTitle: 'Applied path',
+        pathText:
+          'Close contact with a family hardware store provides practical context around sales, inventory, service, and digitalization. This portfolio presents that experience as a learning and solution-building context without attributing undocumented commercial metrics.',
+        skillsTitle: 'Verifiable capabilities',
+        skills: [
+          {
+            code: '01',
+            title: 'Data & BI',
+            items: [
+              'Power BI Desktop',
+              'Basic Power Query and DAX',
+              'SQL Server, T-SQL, and MySQL',
+              'Relational and star modeling',
+              'Cleaning, transformation, and validation',
+            ],
+          },
+          {
+            code: '02',
+            title: 'Python & analytics',
+            items: [
+              'Python applied to data',
+              'pandas and NumPy',
+              'Jupyter',
+              'Matplotlib and Seaborn',
+              'Automation with openpyxl',
+            ],
+          },
+          {
+            code: '03',
+            title: 'Systems',
+            items: [
+              'Project-based Java and Spring Boot',
+              'PHP, HTML, CSS, and JavaScript',
+              'Thymeleaf, JSP, and Bootstrap',
+              'Git and GitHub',
+              'MVC architecture and relational persistence',
+            ],
+          },
+          {
+            code: '04',
+            title: 'Business & processes',
+            items: [
+              'Commercial and operational indicators',
+              'Processes, logistics, and inventory',
+              'Academic finance and accounting',
+              'Competitive analysis',
+              'Executive communication of findings',
+            ],
+          },
+        ],
+        languageTitle: 'Languages',
+        languages: [
+          'Spanish · native',
+          'English · intermediate, Cambridge B1 (2018)',
+          'Portuguese · basic',
+        ],
+        principleTitle: 'Working principle',
+        principle:
+          'I prefer a traceable, well-explained solution over a spectacular claim without evidence. Each case therefore separates verifiable results, simulated data, and limitations.',
+        projects: 'Explore projects',
+        resume: 'View resume',
+      };
+---
+
+<article class="profile">
+  <header class="profile-hero">
+    <div class="container profile-hero__grid">
+      <div>
+        <p class="eyebrow">{copy.eyebrow}</p>
+        <h1>{copy.title}</h1>
+      </div>
+      <div class="profile-hero__intro">
+        <p>{copy.intro}</p>
+        <div class="profile-signal"><span>EO / NOW</span><p>{copy.signal}</p></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="profile-section">
+    <div class="container split-section">
+      <p class="eyebrow">01 / {copy.focusTitle}</p>
+      <div><h2>{copy.focusTitle}</h2><p class="lead">{copy.focusText}</p></div>
+    </div>
+  </section>
+
+  <section class="profile-section profile-section--lined">
+    <div class="container split-section">
+      <p class="eyebrow">02 / {copy.educationTitle}</p>
+      <div>
+        <h2>{copy.educationTitle}</h2>
+        <ol class="timeline">
+          {
+            copy.education.map((item) => (
+              <li>
+                <>
+                  <span>{item.period}</span>
+                  <div>
+                    <>
+                      <h3>{item.title}</h3>
+                      <p>{item.detail}</p>
+                    </>
+                  </div>
+                </>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="profile-section">
+    <div class="container split-section">
+      <p class="eyebrow">03 / {copy.pathTitle}</p>
+      <div><h2>{copy.pathTitle}</h2><p class="lead">{copy.pathText}</p></div>
+    </div>
+  </section>
+
+  <section class="profile-section profile-section--lined">
+    <div class="container">
+      <div class="skills-heading">
+        <p class="eyebrow">04 / {copy.skillsTitle}</p><h2>{copy.skillsTitle}</h2>
+      </div>
+      <div class="skills-grid">
+        {
+          copy.skills.map((group) => (
+            <section class="skill-card">
+              <>
+                <span>{group.code}</span>
+                <h3>{group.title}</h3>
+              </>
+              <ul>
+                {group.items.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="profile-section">
+    <div class="container profile-bottom">
+      <section>
+        <p class="eyebrow">05 / {copy.languageTitle}</p><h2>{copy.languageTitle}</h2><ul>
+          {copy.languages.map((item) => <li>{item}</li>)}
+        </ul>
+      </section>
+      <aside>
+        <p class="eyebrow">{copy.principleTitle}</p><blockquote>{copy.principle}</blockquote>
+      </aside>
+    </div>
+  </section>
+
+  <nav
+    class="container profile-actions"
+    aria-label={locale === 'es' ? 'Siguientes pasos' : 'Next steps'}
+  >
+    <a class="button button--primary" href={withBase(getRoute('projects', locale))}
+      >{copy.projects}<span aria-hidden="true">↗</span></a
+    >
+    <a class="button button--secondary" href={withBase(getRoute('resume', locale))}>{copy.resume}</a
+    >
+  </nav>
+</article>
+
+<style>
+  .profile-hero {
+    padding-block: clamp(5rem, 10vw, 9rem);
+  }
+  .profile-hero__grid,
+  .split-section {
+    display: grid;
+    gap: clamp(2rem, 7vw, 6rem);
+  }
+  h1 {
+    max-width: 13ch;
+    margin: 1rem 0 0;
+    font-size: clamp(3rem, 7.6vw, 7rem);
+  }
+  .profile-hero__intro > p,
+  .lead {
+    max-width: 44rem;
+    color: var(--color-text-muted);
+    font-size: clamp(1.08rem, 2vw, 1.35rem);
+  }
+  .profile-signal {
+    margin-top: var(--space-8);
+    padding: var(--space-6);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--color-glow), transparent 60%), var(--color-surface);
+  }
+  .profile-signal span {
+    color: var(--color-accent-strong);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+  }
+  .profile-signal p {
+    margin: var(--space-3) 0 0;
+  }
+  .profile-section {
+    padding-block: clamp(4rem, 9vw, 8rem);
+  }
+  .profile-section--lined {
+    border-block: 1px solid var(--color-line);
+  }
+  .profile-section h2 {
+    max-width: 13ch;
+    margin: 0 0 var(--space-6);
+    font-size: clamp(2.5rem, 5vw, 4.8rem);
+  }
+  .timeline {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--color-line);
+    list-style: none;
+  }
+  .timeline li {
+    display: grid;
+    gap: var(--space-3);
+    padding-block: var(--space-6);
+    border-bottom: 1px solid var(--color-line);
+  }
+  .timeline li > span,
+  .skill-card > span {
+    color: var(--color-accent-strong);
+    font-family: var(--font-mono);
+    font-size: 0.63rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .timeline h3 {
+    margin: 0;
+    font-size: 1.35rem;
+  }
+  .timeline p,
+  .skill-card li,
+  .profile-bottom li {
+    margin: 0.35rem 0 0;
+    color: var(--color-text-muted);
+  }
+  .skills-heading {
+    display: grid;
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+  }
+  .skills-grid {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .skill-card {
+    padding: var(--space-6);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+  .skill-card h3 {
+    margin: var(--space-4) 0;
+    font-size: 1.55rem;
+  }
+  .skill-card ul,
+  .profile-bottom ul {
+    margin: 0;
+    padding-left: 1.1rem;
+  }
+  .profile-bottom {
+    display: grid;
+    gap: var(--space-8);
+  }
+  .profile-bottom aside {
+    padding: clamp(1.5rem, 5vw, 3.5rem);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(130deg, var(--color-glow), transparent 62%), var(--color-surface);
+  }
+  blockquote {
+    margin: var(--space-6) 0 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.45rem, 3vw, 2.4rem);
+    line-height: 1.25;
+  }
+  .profile-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    padding-block: 0 clamp(5rem, 10vw, 9rem);
+  }
+  @media (min-width: 52rem) {
+    .profile-hero__grid {
+      grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.85fr);
+      align-items: end;
+    }
+    .split-section {
+      grid-template-columns: minmax(12rem, 0.3fr) minmax(0, 0.7fr);
+    }
+    .timeline li {
+      grid-template-columns: 10rem 1fr;
+    }
+    .skills-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .profile-bottom {
+      grid-template-columns: minmax(0, 0.8fr) minmax(24rem, 1.2fr);
+      align-items: start;
+    }
+  }
+</style>

@@ -1,0 +1,83 @@
+---
+import type { Locale } from '../config/site';
+
+interface Props {
+  locale: Locale;
+  eyebrow: string;
+  title: string;
+  description: string;
+}
+
+const { locale, eyebrow, title, description } = Astro.props;
+const notice =
+  locale === 'es'
+    ? 'Estructura preparada. El contenido completo se incorporará en su etapa correspondiente.'
+    : 'Structure ready. Full content will be added in its corresponding stage.';
+---
+
+<section class="route-placeholder">
+  <div class="container route-placeholder__grid">
+    <div>
+      <p class="eyebrow">{eyebrow}</p>
+      <h1>{title}</h1>
+      <p class="route-placeholder__description">{description}</p>
+    </div>
+    <aside>
+      <span>STATUS / FOUNDATION</span>
+      <p>{notice}</p>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .route-placeholder {
+    min-height: 65svh;
+    display: grid;
+    align-items: center;
+    padding-block: var(--space-24);
+  }
+
+  .route-placeholder__grid {
+    display: grid;
+    gap: var(--space-12);
+  }
+
+  .route-placeholder h1 {
+    max-width: 13ch;
+    margin-block: var(--space-4);
+    font-size: clamp(3rem, 8vw, 7rem);
+  }
+
+  .route-placeholder__description {
+    max-width: var(--reading-width);
+    color: var(--color-text-muted);
+    font-size: clamp(1rem, 2vw, 1.25rem);
+  }
+
+  .route-placeholder aside {
+    align-self: end;
+    padding: var(--space-6);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-panel);
+  }
+
+  .route-placeholder aside span {
+    color: var(--color-accent-strong);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+
+  .route-placeholder aside p {
+    margin: var(--space-3) 0 0;
+    color: var(--color-text-muted);
+  }
+
+  @media (min-width: 54rem) {
+    .route-placeholder__grid {
+      grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 0.6fr);
+    }
+  }
+</style>

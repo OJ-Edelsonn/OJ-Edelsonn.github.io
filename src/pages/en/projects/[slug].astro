@@ -1,0 +1,66 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import ProjectCase from '../../../components/ProjectCase.astro';
+import { projectHref } from '../../../data/projects';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const projects = (
+    await getCollection('projects', ({ data }) => data.locale === 'en' && !data.draft)
+  ).sort((a, b) => a.data.priority - b.data.priority);
+  const translations = await getCollection(
+    'projects',
+    ({ data }) => data.locale === 'es' && !data.draft,
+  );
+
+  return projects.map((project, index) => {
+    const translation = translations.find(
+      (entry) => entry.data.translationKey === project.data.translationKey,
+    );
+    return {
+      params: { slug: project.data.slug },
+      props: {
+        project,
+        previous: projects[index - 1],
+        next: projects[index + 1],
+        alternateHref: translation ? projectHref(translation) : '/es/proyectos/',
+      },
+    };
+  });
+}
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  previous?: CollectionEntry<'projects'>;
+  next?: CollectionEntry<'projects'>;
+  alternateHref: string;
+}
+
+const { project, previous, next, alternateHref } = Astro.props;
+const { Content } = await render(project);
+const structuredData = {
+  '@type': 'CreativeWork',
+  '@id': `${Astro.url.href}#project`,
+  name: project.data.title,
+  description: project.data.summary,
+  url: Astro.url.href,
+  inLanguage: 'en',
+  dateCreated: project.data.date.toISOString(),
+  keywords: project.data.technologies.join(', '),
+  author: { '@type': 'Person', name: 'Edelson Anghuelo Orihuela Jara' },
+  sameAs: project.data.repositoryUrl,
+};
+---
+
+<BaseLayout
+  locale="en"
+  routeKey="projects"
+  title={`${project.data.title} — Edelson Orihuela`}
+  description={project.data.summary}
+  alternateHref={alternateHref}
+  structuredData={structuredData}
+>
+  <ProjectCase project={project} locale="en" previous={previous} next={next}>
+    <Content />
+  </ProjectCase>
+</BaseLayout>

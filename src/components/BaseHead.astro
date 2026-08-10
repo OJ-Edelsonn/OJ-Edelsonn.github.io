@@ -1,0 +1,122 @@
+---
+import { SITE, type Locale } from '../config/site';
+
+interface Props {
+  title: string;
+  description: string;
+  locale: Locale;
+  canonicalHref: string;
+  alternateHref: string;
+  xDefaultHref: string;
+  noindex?: boolean;
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const {
+  title,
+  description,
+  locale,
+  canonicalHref,
+  alternateHref,
+  xDefaultHref,
+  noindex = false,
+  structuredData,
+} = Astro.props;
+const site = Astro.site ?? new URL('https://oj-edelsonn.github.io/');
+const alternateLocale = locale === 'es' ? 'en' : 'es';
+const canonicalUrl = new URL(canonicalHref, site);
+const alternateUrl = new URL(alternateHref, site);
+const xDefaultUrl = new URL(xDefaultHref, site);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const homeUrl = new URL(`${base}/es/`, site);
+const socialImageUrl = new URL(`${base}/og.png`, site);
+const personId = `${homeUrl.href}#person`;
+const websiteId = `${homeUrl.origin}${base}/#website`;
+const additionalStructuredData = Array.isArray(structuredData)
+  ? structuredData
+  : structuredData
+    ? [structuredData]
+    : [];
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': personId,
+      name: SITE.name,
+      url: homeUrl.href,
+      email: `mailto:${SITE.email}`,
+      sameAs: [SITE.github, SITE.linkedin],
+      jobTitle:
+        locale === 'es'
+          ? 'Estudiante de Ingeniería Empresarial y de Sistemas'
+          : 'Business and Systems Engineering student',
+      knowsAbout: [
+        'Business Intelligence',
+        'Data Analytics',
+        'SQL',
+        'ETL',
+        'Business Processes',
+        'Information Systems',
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': websiteId,
+      name: `${SITE.shortName} — Portfolio`,
+      url: `${homeUrl.origin}${base}/`,
+      inLanguage: ['es', 'en'],
+      author: { '@id': personId },
+    },
+    ...additionalStructuredData,
+  ],
+};
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+<meta name="description" content={description} />
+<meta name="author" content={SITE.name} />
+<meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+<meta name="theme-color" content="#03070d" />
+<meta name="color-scheme" content="dark light" />
+<link rel="icon" href={`${base}/favicon.ico`} sizes="any" />
+<link rel="canonical" href={canonicalUrl} />
+<link rel="alternate" hreflang={locale} href={canonicalUrl} />
+<link rel="alternate" hreflang={alternateLocale} href={alternateUrl} />
+<link rel="alternate" hreflang="x-default" href={xDefaultUrl} />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={`${SITE.shortName} — Portfolio`} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:locale" content={locale === 'es' ? 'es_PE' : 'en_US'} />
+<meta property="og:locale:alternate" content={locale === 'es' ? 'en_US' : 'es_PE'} />
+<meta property="og:image" content={socialImageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta
+  property="og:image:alt"
+  content={locale === 'es'
+    ? 'Portafolio profesional de Edelson Orihuela: datos, procesos y sistemas'
+    : 'Edelson Orihuela professional portfolio: data, processes, and systems'}
+/>
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={socialImageUrl} />
+<title>{title}</title>
+<script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+<script is:inline>
+  (() => {
+    try {
+      const stored = localStorage.getItem('eo-theme');
+      const preferred = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      document.documentElement.dataset.theme = stored || preferred;
+    } catch {
+      document.documentElement.dataset.theme = 'dark';
+    }
+  })();
+</script>

@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import InsightsIndex from '../../../components/InsightsIndex.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('posts', ({ data }) => data.locale === 'en' && data.draft)).sort(
+  (a, b) => a.data.title.localeCompare(b.data.title),
+);
+---
+
+<BaseLayout
+  locale="en"
+  routeKey="insights"
+  title="Insights — Edelson Orihuela"
+  description="Insights on data, BI, processes, and systems."
+>
+  <InsightsIndex locale="en" posts={posts} />
+</BaseLayout>

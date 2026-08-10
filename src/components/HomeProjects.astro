@@ -1,0 +1,68 @@
+---
+import type { Locale } from '../config/site';
+import type { ProjectEntry } from '../data/projects';
+import { getRoute, withBase } from '../i18n/routes';
+import ProjectCard from './ProjectCard.astro';
+import SectionHeader from './SectionHeader.astro';
+
+interface Props {
+  locale: Locale;
+  projects: ProjectEntry[];
+}
+
+const { locale, projects } = Astro.props;
+const copy =
+  locale === 'es'
+    ? {
+        eyebrow: 'Selección / 07 casos',
+        title: 'Trabajo que conecta análisis con ejecución.',
+        description:
+          'Proyectos personales seleccionados por su relación con datos, BI, consultoría y construcción de sistemas.',
+        link: 'Ver archivo completo',
+      }
+    : {
+        eyebrow: 'Selection / 07 cases',
+        title: 'Work connecting analysis with execution.',
+        description:
+          'Personal projects selected for their relevance to data, BI, consulting, and systems development.',
+        link: 'View full archive',
+      };
+---
+
+<section class="home-projects">
+  <div class="container">
+    <SectionHeader
+      eyebrow={copy.eyebrow}
+      title={copy.title}
+      description={copy.description}
+      linkHref={withBase(getRoute('projects', locale))}
+      linkLabel={copy.link}
+    />
+    <div class="home-projects__grid">
+      {
+        projects.map((project, index) => (
+          <ProjectCard project={project} locale={locale} index={index} emphasis={index === 0} />
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .home-projects {
+    padding-block: clamp(5rem, 10vw, 9rem);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .home-projects__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 46rem) {
+    .home-projects__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

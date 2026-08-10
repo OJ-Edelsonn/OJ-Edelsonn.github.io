@@ -1,0 +1,18 @@
+---
+import RoutePlaceholder from '../components/RoutePlaceholder.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  locale="es"
+  routeKey="notFound"
+  title="404 — Edelson Orihuela"
+  description="Página no encontrada. Page not found."
+>
+  <RoutePlaceholder
+    locale="es"
+    eyebrow="Error / 404"
+    title="Señal no encontrada"
+    description="La ruta no existe. Use the language selector or the main navigation to continue."
+  />
+</BaseLayout>

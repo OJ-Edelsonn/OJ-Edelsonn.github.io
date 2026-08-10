@@ -1,0 +1,77 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  description?: string;
+  linkHref?: string;
+  linkLabel?: string;
+}
+
+const { eyebrow, title, description, linkHref, linkLabel } = Astro.props;
+---
+
+<header class="section-header">
+  <div>
+    <p class="eyebrow">{eyebrow}</p>
+    <h2>{title}</h2>
+  </div>
+  <div class="section-header__context">
+    {description && <p>{description}</p>}
+    {
+      linkHref && linkLabel && (
+        <a href={linkHref}>
+          {linkLabel}
+          <span aria-hidden="true">↗</span>
+        </a>
+      )
+    }
+  </div>
+</header>
+
+<style>
+  .section-header {
+    display: grid;
+    gap: var(--space-6);
+    align-items: end;
+    margin-bottom: clamp(2rem, 5vw, 4rem);
+  }
+
+  h2 {
+    max-width: 15ch;
+    margin: 0.75rem 0 0;
+    font-size: clamp(2.35rem, 5vw, 4.8rem);
+    font-weight: 650;
+  }
+
+  .section-header__context {
+    display: grid;
+    gap: var(--space-4);
+    align-content: end;
+  }
+
+  .section-header__context p {
+    max-width: 35rem;
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  a {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--color-accent-strong);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  @media (min-width: 52rem) {
+    .section-header {
+      grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr);
+    }
+  }
+</style>

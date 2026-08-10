@@ -1,0 +1,53 @@
+---
+import type { Locale } from '../config/site';
+import { getAlternateLocale, getRoute, withBase, type RouteKey } from '../i18n/routes';
+import { useTranslations } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+  routeKey: RouteKey;
+  alternateHref?: string;
+}
+
+const { locale, routeKey, alternateHref } = Astro.props;
+const alternateLocale = getAlternateLocale(locale);
+const href = withBase(alternateHref ?? getRoute(routeKey, alternateLocale));
+const t = useTranslations(locale);
+---
+
+<a class="language-switcher" href={href} lang={alternateLocale} aria-label={t.language}>
+  <span class="language-switcher__active">{locale.toUpperCase()}</span>
+  <span aria-hidden="true">/</span>
+  <span>{alternateLocale.toUpperCase()}</span>
+</a>
+
+<style>
+  .language-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    min-height: 2.35rem;
+    padding: 0.35rem 0.6rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      background var(--transition-fast);
+  }
+
+  .language-switcher:hover {
+    border-color: var(--color-line-strong);
+    background: var(--color-glow);
+    color: var(--color-text);
+  }
+
+  .language-switcher__active {
+    color: var(--color-accent-strong);
+  }
+</style>

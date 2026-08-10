@@ -1,0 +1,581 @@
+---
+import type { Locale } from '../config/site';
+import { withBase } from '../i18n/routes';
+import {
+  categoryLabel,
+  collaborationLabel,
+  natureLabel,
+  projectHref,
+  statusLabel,
+  typeLabel,
+  type ProjectEntry,
+} from '../data/projects';
+
+interface Props {
+  project: ProjectEntry;
+  locale: Locale;
+  previous?: ProjectEntry;
+  next?: ProjectEntry;
+}
+
+const { project, locale, previous, next } = Astro.props;
+const secondaryGallery = project.data.gallery.filter(
+  (item) => item.src !== project.data.coverImage,
+);
+const copy =
+  locale === 'es'
+    ? {
+        index: 'Caso profesional',
+        overview: 'Ficha del proyecto',
+        role: 'Contexto',
+        status: 'Estado',
+        type: 'Tipo',
+        collaboration: 'Desarrollo',
+        course: 'Curso',
+        data: 'Naturaleza de datos',
+        sources: 'Fuentes de datos',
+        outcomes: 'Resultados verificables',
+        evidence: 'Evidencia del proyecto',
+        limitations: 'Alcance y limitaciones',
+        repository: 'Ver repositorio',
+        demo: 'Abrir demo pública',
+        powerBi: 'Abrir Power BI',
+        document: 'Ver documento',
+        previous: 'Caso anterior',
+        next: 'Siguiente caso',
+        back: 'Todos los proyectos',
+        newTab: '(abre en una pestaña nueva)',
+      }
+    : {
+        index: 'Professional case',
+        overview: 'Project brief',
+        role: 'Context',
+        status: 'Status',
+        type: 'Type',
+        collaboration: 'Development',
+        course: 'Course',
+        data: 'Data nature',
+        sources: 'Data sources',
+        outcomes: 'Verifiable outcomes',
+        evidence: 'Project evidence',
+        limitations: 'Scope and limitations',
+        repository: 'View repository',
+        demo: 'Open public demo',
+        powerBi: 'Open Power BI',
+        document: 'View document',
+        previous: 'Previous case',
+        next: 'Next case',
+        back: 'All projects',
+        newTab: '(opens in a new tab)',
+      };
+
+const projectsIndex = locale === 'es' ? '/es/proyectos/' : '/en/projects/';
+---
+
+<article class="case-study">
+  <header class="case-hero">
+    <div class="container case-hero__topline">
+      <a href={withBase(projectsIndex)}>← {copy.back}</a>
+      <span>{copy.index} / {String(project.data.priority).padStart(2, '0')}</span>
+    </div>
+    <div class="container case-hero__grid">
+      <div>
+        <p class="eyebrow">{categoryLabel(project.data.category, locale)}</p>
+        <h1>{project.data.title}</h1>
+      </div>
+      <div class="case-hero__summary">
+        <p>{project.data.summary}</p>
+        <div class="case-hero__actions">
+          {
+            project.data.repositoryUrl && (
+              <a
+                class="button button--primary"
+                href={project.data.repositoryUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {copy.repository}
+                <span class="sr-only"> {copy.newTab}</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            )
+          }
+          {
+            project.data.demoUrl && (
+              <a
+                class="button button--secondary"
+                href={project.data.demoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {copy.demo}
+                <span class="sr-only"> {copy.newTab}</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            )
+          }
+          {
+            project.data.powerBiUrl && (
+              <a
+                class="button button--secondary"
+                href={project.data.powerBiUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {copy.powerBi}
+                <span class="sr-only"> {copy.newTab}</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            )
+          }
+          {
+            project.data.documentUrl && (
+              <a
+                class="button button--secondary"
+                href={withBase(project.data.documentUrl)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {copy.document}
+                <span class="sr-only"> {copy.newTab}</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </header>
+
+  {
+    project.data.coverImage && (
+      <div class="container case-cover">
+        <img
+          src={withBase(project.data.coverImage)}
+          alt={project.data.gallery[0]?.alt ?? ''}
+          width="1600"
+          height="900"
+          decoding="async"
+          fetchpriority="high"
+        />
+      </div>
+    )
+  }
+
+  <div class="container case-layout">
+    <aside class="case-facts" aria-label={copy.overview}>
+      <p class="eyebrow">{copy.overview}</p>
+      <dl>
+        {
+          project.data.role && (
+            <div>
+              <>
+                <dt>{copy.role}</dt>
+                <dd>{project.data.role}</dd>
+              </>
+            </div>
+          )
+        }
+        <div><dt>{copy.status}</dt><dd>{statusLabel(project.data.status, locale)}</dd></div>
+        <div><dt>{copy.type}</dt><dd>{typeLabel(project.data.projectType, locale)}</dd></div>
+        <div>
+          <dt>{copy.collaboration}</dt><dd>
+            {collaborationLabel(project.data.collaboration, locale)}
+          </dd>
+        </div>
+        {
+          project.data.course && (
+            <div>
+              <>
+                <dt>{copy.course}</dt>
+                <dd>{project.data.course}</dd>
+              </>
+            </div>
+          )
+        }
+        {
+          project.data.dataNature.length > 0 && (
+            <div>
+              <>
+                <dt>{copy.data}</dt>
+                <dd>
+                  {project.data.dataNature.map((item) => natureLabel(item, locale)).join(' · ')}
+                </dd>
+              </>
+            </div>
+          )
+        }
+      </dl>
+      <ul class="case-facts__tech" aria-label={locale === 'es' ? 'Tecnologías' : 'Technologies'}>
+        {project.data.technologies.map((technology) => <li>{technology}</li>)}
+      </ul>
+    </aside>
+
+    <div class="case-main">
+      <div class="case-prose">
+        <slot />
+      </div>
+
+      {
+        project.data.outcomes.length > 0 && (
+          <section class="case-outcomes">
+            <p class="eyebrow">{copy.outcomes}</p>
+            <ol>
+              {project.data.outcomes.map((outcome, index) => (
+                <li>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <p>{outcome}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )
+      }
+
+      {
+        project.data.dataSources.length > 0 && (
+          <section class="case-sources">
+            <h2>{copy.sources}</h2>
+            <ul>
+              {project.data.dataSources.map((source) => (
+                <li>{source}</li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {
+        project.data.limitations.length > 0 && (
+          <aside class="case-limitations" aria-label={copy.limitations}>
+            <p class="eyebrow">{copy.limitations}</p>
+            <ul>
+              {project.data.limitations.map((limitation) => (
+                <li>{limitation}</li>
+              ))}
+            </ul>
+          </aside>
+        )
+      }
+    </div>
+  </div>
+
+  {
+    secondaryGallery.length > 0 && (
+      <section class="case-gallery">
+        <div class="container">
+          <p class="eyebrow">{copy.evidence}</p>
+          <div class="case-gallery__grid">
+            {secondaryGallery.map((item, index) => (
+              <figure
+                class:list={{
+                  'case-gallery__wide': index === 0 && secondaryGallery.length % 2 === 1,
+                }}
+              >
+                <img
+                  src={withBase(item.src)}
+                  alt={item.alt}
+                  width="1600"
+                  height="900"
+                  loading="lazy"
+                  decoding="async"
+                />
+                {item.caption && (
+                  <figcaption>
+                    <span>{String(index + 2).padStart(2, '0')}</span>
+                    {item.caption}
+                  </figcaption>
+                )}
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <nav
+    class="container case-navigation"
+    aria-label={locale === 'es' ? 'Navegación entre casos' : 'Case navigation'}
+  >
+    {
+      previous ? (
+        <a href={withBase(projectHref(previous))}>
+          <>
+            <span>{copy.previous}</span>
+            <strong>← {previous.data.title}</strong>
+          </>
+        </a>
+      ) : (
+        <span />
+      )
+    }
+    {
+      next ? (
+        <a class="case-navigation__next" href={withBase(projectHref(next))}>
+          <>
+            <span>{copy.next}</span>
+            <strong>{next.data.title} →</strong>
+          </>
+        </a>
+      ) : (
+        <span />
+      )
+    }
+  </nav>
+</article>
+
+<style>
+  .case-hero {
+    padding-block: clamp(3rem, 8vw, 7rem);
+  }
+  .case-hero__topline {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: clamp(3rem, 8vw, 7rem);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .case-hero__topline a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+  .case-hero__topline a:hover {
+    color: var(--color-text);
+  }
+  .case-hero__grid {
+    display: grid;
+    gap: var(--space-8);
+    align-items: end;
+  }
+  h1 {
+    max-width: 13ch;
+    margin: 1rem 0 0;
+    font-size: clamp(3rem, 7.8vw, 7.3rem);
+    font-weight: 650;
+  }
+  .case-hero__summary > p {
+    max-width: 39rem;
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: clamp(1.05rem, 2vw, 1.3rem);
+  }
+  .case-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-8);
+  }
+  .case-cover {
+    overflow: hidden;
+    aspect-ratio: 16 / 8.2;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-elevated);
+    box-shadow: var(--shadow-panel);
+  }
+  .case-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .case-layout {
+    display: grid;
+    gap: clamp(3rem, 8vw, 7rem);
+    padding-block: clamp(5rem, 10vw, 9rem);
+  }
+  .case-facts {
+    align-self: start;
+    padding: var(--space-6);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+  }
+  dl {
+    margin: var(--space-6) 0;
+  }
+  dl div {
+    display: grid;
+    gap: 0.3rem;
+    padding-block: 0.8rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  dt {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  dd {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  .case-facts__tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .case-facts__tech li {
+    padding: 0.28rem 0.5rem;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+  }
+  .case-main {
+    min-width: 0;
+  }
+  .case-prose :global(h2) {
+    margin: clamp(3rem, 7vw, 5rem) 0 var(--space-4);
+    font-size: clamp(2rem, 4vw, 3.2rem);
+  }
+  .case-prose :global(h2:first-child) {
+    margin-top: 0;
+  }
+  .case-prose :global(p),
+  .case-prose :global(li) {
+    color: var(--color-text-muted);
+    font-size: 1.04rem;
+  }
+  .case-prose :global(ul) {
+    padding-left: 1.2rem;
+  }
+  .case-outcomes,
+  .case-sources,
+  .case-limitations {
+    margin-top: clamp(4rem, 8vw, 6rem);
+  }
+  .case-outcomes ol {
+    display: grid;
+    gap: 0;
+    margin: var(--space-6) 0 0;
+    padding: 0;
+    border-top: 1px solid var(--color-line);
+    list-style: none;
+  }
+  .case-outcomes li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-4);
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--color-line);
+  }
+  .case-outcomes li span {
+    color: var(--color-accent-strong);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+  }
+  .case-outcomes li p {
+    margin: 0;
+  }
+  .case-sources h2 {
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+  }
+  .case-sources ul,
+  .case-limitations ul {
+    padding-left: 1.2rem;
+    color: var(--color-text-muted);
+  }
+  .case-limitations {
+    padding: var(--space-6);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(130deg, var(--color-glow), transparent 50%), var(--color-surface);
+  }
+  .case-gallery {
+    padding-block: clamp(5rem, 10vw, 9rem);
+    border-block: 1px solid var(--color-line);
+  }
+  .case-gallery__grid {
+    display: grid;
+    gap: var(--space-6);
+    margin-top: var(--space-8);
+  }
+  figure {
+    min-width: 0;
+    margin: 0;
+  }
+  figure img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-elevated);
+  }
+  figcaption {
+    display: flex;
+    gap: var(--space-3);
+    padding-top: var(--space-3);
+    color: var(--color-text-muted);
+    font-size: 0.82rem;
+  }
+  figcaption span {
+    color: var(--color-accent-strong);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+  }
+  .case-navigation {
+    display: grid;
+    gap: var(--space-4);
+    padding-block: clamp(4rem, 8vw, 7rem);
+  }
+  .case-navigation a {
+    display: grid;
+    gap: 0.5rem;
+    padding: var(--space-6);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    text-decoration: none;
+    transition:
+      border-color var(--transition-fast),
+      transform var(--transition-base);
+  }
+  .case-navigation a:hover {
+    transform: translateY(-3px);
+    border-color: var(--color-line-strong);
+  }
+  .case-navigation span {
+    color: var(--color-accent-strong);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .case-navigation strong {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+  }
+  @media (min-width: 52rem) {
+    .case-hero__grid {
+      grid-template-columns: minmax(0, 1.2fr) minmax(20rem, 0.8fr);
+    }
+    .case-layout {
+      grid-template-columns: minmax(15rem, 0.34fr) minmax(0, 0.66fr);
+    }
+    .case-facts {
+      position: sticky;
+      top: calc(var(--header-height) + var(--space-6));
+    }
+    .case-gallery__grid,
+    .case-navigation {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .case-gallery__wide {
+      grid-column: span 2;
+    }
+    .case-navigation__next {
+      text-align: right;
+    }
+  }
+</style>

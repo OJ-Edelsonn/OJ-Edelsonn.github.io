@@ -1,0 +1,278 @@
+---
+import type { Locale } from '../config/site';
+import { SITE } from '../config/site';
+import { getRoute, withBase } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const resumeUrl = withBase(SITE.resumePath);
+const copy =
+  locale === 'es'
+    ? {
+        eyebrow: 'Documento / perfil profesional',
+        title: 'Currículum',
+        intro:
+          'Resumen profesional y acceso directo al CV maestro de Edelson Anghuelo Orihuela Jara.',
+        summary:
+          'Estudiante de séptimo ciclo de Ingeniería Empresarial y de Sistemas orientado a Business Intelligence, análisis de datos, procesos y sistemas de información. Experiencia académica aplicando Power BI, SQL Server, Python, Excel y desarrollo web a casos de negocio y operación.',
+        view: 'Visualizar PDF',
+        download: 'Descargar CV',
+        contact: 'Contactar',
+        preview: 'Vista del CV en PDF',
+        fallback: 'Tu navegador no puede mostrar el PDF.',
+        facts: [
+          ['Ubicación', 'Lima, Perú'],
+          ['Disponibilidad', 'Prácticas preprofesionales'],
+          ['Modalidad', 'Presencial, híbrida o remota'],
+          ['Idiomas', 'Español, inglés intermedio y portugués básico'],
+        ],
+        strengths: 'Fortalezas principales',
+        items: [
+          'Power BI, SQL Server y modelamiento de datos',
+          'Python aplicado a limpieza, análisis y visualización',
+          'Procesos, operaciones, logística e indicadores',
+          'Sistemas web con Java, Spring Boot, PHP y MySQL',
+        ],
+        note: 'El PDF maestro se mantiene como un único documento reemplazable, sin duplicar su contenido dentro de la interfaz.',
+      }
+    : {
+        eyebrow: 'Document / professional profile',
+        title: 'Resume',
+        intro:
+          'Professional summary and direct access to Edelson Anghuelo Orihuela Jara’s master resume.',
+        summary:
+          'Seventh-semester Business and Systems Engineering student focused on Business Intelligence, data analytics, processes, and information systems. Academic experience applying Power BI, SQL Server, Python, Excel, and web development to business and operational cases.',
+        view: 'View PDF',
+        download: 'Download resume',
+        contact: 'Contact',
+        preview: 'PDF resume preview',
+        fallback: 'Your browser cannot display the PDF.',
+        facts: [
+          ['Location', 'Lima, Peru'],
+          ['Availability', 'Pre-professional internships'],
+          ['Work mode', 'On-site, hybrid, or remote'],
+          ['Languages', 'Spanish, intermediate English, and basic Portuguese'],
+        ],
+        strengths: 'Core strengths',
+        items: [
+          'Power BI, SQL Server, and data modeling',
+          'Python for cleaning, analysis, and visualization',
+          'Processes, operations, logistics, and indicators',
+          'Web systems with Java, Spring Boot, PHP, and MySQL',
+        ],
+        note: 'The current master PDF is in Spanish and remains a single replaceable document without duplicating its content in the interface.',
+      };
+---
+
+<article class="resume-page">
+  <header class="resume-hero">
+    <div class="container resume-hero__grid">
+      <div>
+        <p class="eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1><p class="resume-hero__intro">
+          {copy.intro}
+        </p>
+      </div>
+      <div class="resume-hero__actions">
+        <a class="button button--primary" href={resumeUrl} target="_blank" rel="noopener"
+          >{copy.view}<span aria-hidden="true">↗</span></a
+        >
+        <a class="button button--secondary" href={resumeUrl} download>{copy.download}</a>
+        <a class="resume-contact" href={withBase(getRoute('contact', locale))}>{copy.contact}</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="resume-summary">
+    <div class="container resume-summary__grid">
+      <section><p class="eyebrow">01 / Profile</p><h2>{copy.summary}</h2></section>
+      <dl>
+        {
+          copy.facts.map(([term, detail]) => (
+            <div>
+              <>
+                <dt>{term}</dt>
+                <dd>{detail}</dd>
+              </>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <section class="resume-strengths">
+    <div class="container resume-strengths__panel">
+      <div><p class="eyebrow">02 / {copy.strengths}</p><h2>{copy.strengths}</h2></div>
+      <ol>
+        {
+          copy.items.map((item, index) => (
+            <li>
+              <>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <p>{item}</p>
+              </>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="container resume-preview">
+    <div class="resume-preview__header"><p class="eyebrow">03 / PDF</p><p>{copy.note}</p></div>
+    <iframe src={resumeUrl} title={copy.preview} loading="lazy"></iframe>
+    <p class="resume-preview__fallback">
+      {copy.fallback}
+      <a href={resumeUrl}>{copy.download}</a>
+    </p>
+  </section>
+</article>
+
+<style>
+  .resume-hero {
+    padding-block: clamp(5rem, 10vw, 9rem);
+  }
+  .resume-hero__grid {
+    display: grid;
+    gap: var(--space-8);
+    align-items: end;
+  }
+  h1 {
+    margin: 1rem 0;
+    font-size: clamp(4rem, 10vw, 9rem);
+  }
+  .resume-hero__intro {
+    max-width: 40rem;
+    color: var(--color-text-muted);
+    font-size: 1.1rem;
+  }
+  .resume-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
+  }
+  .resume-contact {
+    padding: 0.8rem;
+    color: var(--color-accent-strong);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .resume-summary {
+    padding-block: clamp(4rem, 9vw, 8rem);
+    border-block: 1px solid var(--color-line);
+  }
+  .resume-summary__grid {
+    display: grid;
+    gap: var(--space-8);
+  }
+  .resume-summary h2 {
+    max-width: 27ch;
+    margin: var(--space-6) 0 0;
+    font-size: clamp(2rem, 4.5vw, 4rem);
+    line-height: 1.15;
+  }
+  dl {
+    margin: 0;
+    padding: var(--space-6);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+  }
+  dl div {
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--color-line);
+  }
+  dl div:last-child {
+    border-bottom: 0;
+  }
+  dt {
+    color: var(--color-accent-strong);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  dd {
+    margin: 0.35rem 0 0;
+  }
+  .resume-strengths {
+    padding-block: clamp(4rem, 9vw, 8rem);
+  }
+  .resume-strengths__panel {
+    display: grid;
+    gap: var(--space-8);
+    padding: clamp(1.5rem, 5vw, 4rem);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(130deg, var(--color-glow), transparent 60%), var(--color-surface);
+  }
+  .resume-strengths h2 {
+    margin: var(--space-4) 0 0;
+    font-size: clamp(2.2rem, 5vw, 4.5rem);
+  }
+  ol {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--color-line);
+    list-style: none;
+  }
+  li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-4);
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--color-line);
+  }
+  li span {
+    color: var(--color-accent-strong);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+  }
+  li p {
+    margin: 0;
+  }
+  .resume-preview {
+    padding-block: 0 clamp(5rem, 10vw, 9rem);
+  }
+  .resume-preview__header {
+    display: grid;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+  .resume-preview__header p:last-child {
+    max-width: 44rem;
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+  iframe {
+    width: 100%;
+    min-height: 52rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-elevated);
+  }
+  .resume-preview__fallback {
+    margin-top: var(--space-4);
+    color: var(--color-text-muted);
+  }
+  @media (min-width: 52rem) {
+    .resume-hero__grid,
+    .resume-summary__grid {
+      grid-template-columns: minmax(0, 1.2fr) minmax(20rem, 0.8fr);
+    }
+    .resume-strengths__panel {
+      grid-template-columns: minmax(0, 0.9fr) minmax(22rem, 1.1fr);
+    }
+  }
+  @media (max-width: 40rem) {
+    iframe {
+      min-height: 36rem;
+    }
+  }
+</style>

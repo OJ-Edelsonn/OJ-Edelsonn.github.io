@@ -1,0 +1,454 @@
+---
+import type { Locale } from '../config/site';
+import { categoryLabel, type CareerArea, type ProjectEntry } from '../data/projects';
+import ProjectCard from './ProjectCard.astro';
+
+interface Props {
+  locale: Locale;
+  projects: ProjectEntry[];
+}
+
+const { locale, projects } = Astro.props;
+const categories = [...new Set(projects.map((project) => project.data.category))];
+const personalProjects = projects.filter((project) => project.data.projectType === 'personal');
+const academicProjects = projects.filter((project) => project.data.projectType === 'academic');
+const primaryPersonalProject = personalProjects[0];
+const remainingPersonalProjects = personalProjects.slice(1).map((project, index) => ({
+  project,
+  order: index + 1,
+}));
+const personalColumns = [
+  remainingPersonalProjects.filter((_, index) => index % 2 === 0),
+  remainingPersonalProjects.filter((_, index) => index % 2 !== 0),
+];
+const areaOrder: CareerArea[] = ['business', 'systems'];
+const academicFallback = locale === 'es' ? 'Archivo académico' : 'Academic archive';
+
+const copy =
+  locale === 'es'
+    ? {
+        eyebrow: 'Archivo profesional / 02 categorías',
+        title: 'Proyectos personales y académicos.',
+        description:
+          'Primero se presentan las iniciativas personales publicadas en GitHub. Luego, el archivo académico se organiza por las áreas Empresarial y de Sistemas, conservando cada curso.',
+        all: 'Todos',
+        filterLabel: 'Filtrar proyectos por especialidad',
+        count: `${projects.length} casos disponibles`,
+        personal: 'Proyectos personales',
+        personalText:
+          'Siete iniciativas desarrolladas de forma independiente y publicadas como portafolio profesional.',
+        academic: 'Proyectos académicos',
+        academicText:
+          'Doce trabajos seleccionados de la carrera, divididos por área profesional y agrupados por curso.',
+        caseSingular: 'caso',
+        casePlural: 'casos',
+        areas: {
+          business: {
+            name: 'Área Empresarial',
+            description:
+              'Cursos y casos académicos de estrategia, análisis competitivo, procesos, operaciones y logística.',
+          },
+          systems: {
+            name: 'Área de Sistemas',
+            description:
+              'Cursos y proyectos académicos de programación, bases de datos, desarrollo web, arquitectura e investigación informática.',
+          },
+        },
+      }
+    : {
+        eyebrow: 'Professional archive / 02 categories',
+        title: 'Personal and academic projects.',
+        description:
+          'Personal initiatives published on GitHub come first. The academic archive then divides work into Business and Systems areas while preserving each course.',
+        all: 'All',
+        filterLabel: 'Filter projects by specialty',
+        count: `${projects.length} cases available`,
+        personal: 'Personal projects',
+        personalText:
+          'Seven independently developed initiatives published as a professional portfolio.',
+        academic: 'Academic projects',
+        academicText:
+          'Twelve selected degree projects divided by professional area and grouped by course.',
+        caseSingular: 'case',
+        casePlural: 'cases',
+        areas: {
+          business: {
+            name: 'Business Area',
+            description:
+              'Academic courses and cases in strategy, competitive analysis, processes, operations, and logistics.',
+          },
+          systems: {
+            name: 'Systems Area',
+            description:
+              'Academic courses and projects in programming, databases, web development, architecture, and computing research.',
+          },
+        },
+      };
+
+const caseLabel = (count: number) => (count === 1 ? copy.caseSingular : copy.casePlural);
+const academicAreas = areaOrder.map((area) => {
+  const areaProjects = academicProjects.filter((project) => project.data.careerArea === area);
+  const courses = [
+    ...new Set(areaProjects.map((project) => project.data.course ?? academicFallback)),
+  ].map((course) => ({
+    course,
+    projects: areaProjects.filter(
+      (project) => (project.data.course ?? academicFallback) === course,
+    ),
+  }));
+
+  return {
+    id: area,
+    ...copy.areas[area],
+    projects: areaProjects,
+    courses,
+  };
+});
+
+const projectIndex = (project: ProjectEntry) => projects.indexOf(project);
+---
+
+<section class="catalog-hero">
+  <div class="container catalog-hero__grid">
+    <div>
+      <p class="eyebrow">{copy.eyebrow}</p>
+      <h1>{copy.title}</h1>
+    </div>
+    <div class="catalog-hero__context">
+      <p>{copy.description}</p>
+      <span>{copy.count}</span>
+    </div>
+  </div>
+</section>
+
+<section class="catalog" data-project-catalog>
+  <div class="container">
+    <div class="catalog__filters" role="group" aria-label={copy.filterLabel}>
+      <button type="button" data-filter="all" aria-pressed="true">{copy.all}</button>
+      {
+        categories.map((category) => (
+          <button type="button" data-filter={category} aria-pressed="false">
+            {categoryLabel(category, locale)}
+          </button>
+        ))
+      }
+    </div>
+
+    <section class="catalog__section" data-catalog-section data-project-type="personal">
+      <header class="catalog__section-header">
+        <div>
+          <p class="eyebrow">01 / {copy.personal}</p>
+          <h2>{copy.personal}</h2>
+        </div>
+        <div class="catalog__section-context">
+          <p>{copy.personalText}</p>
+          <span>{personalProjects.length} {caseLabel(personalProjects.length)}</span>
+        </div>
+      </header>
+      <div aria-live="polite">
+        {
+          primaryPersonalProject && (
+            <div class="catalog__personal-featured" data-personal-grid-item>
+              <ProjectCard
+                project={primaryPersonalProject}
+                locale={locale}
+                index={projectIndex(primaryPersonalProject)}
+                emphasis
+              />
+            </div>
+          )
+        }
+        <div class="catalog__personal-columns">
+          {
+            personalColumns.map((column) => (
+              <div class="catalog__personal-column">
+                {column.map(({ project, order }) => (
+                  <div
+                    class="catalog__personal-item"
+                    data-personal-grid-item
+                    style={`--project-order: ${order}`}
+                  >
+                    <ProjectCard project={project} locale={locale} index={projectIndex(project)} />
+                  </div>
+                ))}
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="catalog__section" data-catalog-section data-project-type="academic">
+      <header class="catalog__section-header">
+        <div>
+          <p class="eyebrow">02 / {copy.academic}</p>
+          <h2>{copy.academic}</h2>
+        </div>
+        <div class="catalog__section-context">
+          <p>{copy.academicText}</p>
+          <span>{academicProjects.length} {caseLabel(academicProjects.length)}</span>
+        </div>
+      </header>
+
+      <div class="catalog__academic-areas">
+        {
+          academicAreas.map((area, areaIndex) => (
+            <section class="catalog__academic-area" data-area-group data-career-area={area.id}>
+              <header class="catalog__area-header">
+                <div>
+                  <p class="eyebrow">
+                    02.{areaIndex + 1} / {area.name}
+                  </p>
+                  <h3>{area.name}</h3>
+                </div>
+                <div class="catalog__area-context">
+                  <p>{area.description}</p>
+                  <span>
+                    {area.projects.length} {caseLabel(area.projects.length)}
+                  </span>
+                </div>
+              </header>
+
+              <div class="catalog__courses">
+                {area.courses.map((group) => (
+                  <section class="catalog__course" data-course-group>
+                    <div class="catalog__course-title">
+                      <h4>{group.course}</h4>
+                      <span>
+                        {group.projects.length} {caseLabel(group.projects.length)}
+                      </span>
+                    </div>
+                    <div class="catalog__grid">
+                      {group.projects.map((project) => (
+                        <ProjectCard
+                          project={project}
+                          locale={locale}
+                          index={projectIndex(project)}
+                          headingLevel="h5"
+                        />
+                      ))}
+                    </div>
+                  </section>
+                ))}
+              </div>
+            </section>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-project-catalog]').forEach((catalog) => {
+    const buttons = [...catalog.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+    const cards = [...catalog.querySelectorAll<HTMLElement>('[data-project-card]')];
+    const updateGroups = () => {
+      catalog
+        .querySelectorAll<HTMLElement>(
+          '[data-course-group], [data-area-group], [data-catalog-section]',
+        )
+        .forEach((group) => {
+          group.hidden = ![...group.querySelectorAll<HTMLElement>('[data-project-card]')].some(
+            (card) => !card.hidden,
+          );
+        });
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const filter = button.dataset.filter;
+        buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+        cards.forEach((card) => {
+          const hidden = filter !== 'all' && card.dataset.category !== filter;
+          card.hidden = hidden;
+          const personalItem = card.closest<HTMLElement>('[data-personal-grid-item]');
+          if (personalItem) personalItem.hidden = hidden;
+        });
+        updateGroups();
+      });
+    });
+  });
+</script>
+
+<style>
+  .catalog-hero {
+    padding-block: clamp(5rem, 10vw, 9rem) clamp(3rem, 7vw, 6rem);
+  }
+  .catalog-hero__grid {
+    display: grid;
+    gap: var(--space-8);
+    align-items: end;
+  }
+  h1 {
+    max-width: 13ch;
+    margin: 1rem 0 0;
+    font-size: clamp(3rem, 8vw, 7.5rem);
+    font-weight: 650;
+  }
+  .catalog-hero__context,
+  .catalog__section-context,
+  .catalog__area-context {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .catalog-hero__context p,
+  .catalog__section-context p,
+  .catalog__area-context p {
+    max-width: 40rem;
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+  .catalog-hero__context span,
+  .catalog__section-context span,
+  .catalog__area-context span,
+  .catalog__course-title span {
+    color: var(--color-accent-strong);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .catalog {
+    padding-block: 0 clamp(5rem, 10vw, 9rem);
+  }
+  .catalog__filters {
+    position: sticky;
+    z-index: 5;
+    top: var(--header-height);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-bottom: clamp(4rem, 8vw, 7rem);
+    padding-block: var(--space-4);
+    border-block: 1px solid var(--color-line);
+    background: color-mix(in srgb, var(--color-background) 92%, transparent);
+    backdrop-filter: blur(16px);
+  }
+  button {
+    min-height: 2.65rem;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition:
+      background var(--transition-fast),
+      border-color var(--transition-fast),
+      color var(--transition-fast);
+  }
+  button:hover,
+  button[aria-pressed='true'] {
+    border-color: var(--color-accent);
+    background: var(--color-glow);
+    color: var(--color-text);
+  }
+  .catalog__section + .catalog__section {
+    margin-top: clamp(8rem, 16vw, 14rem);
+  }
+  .catalog__section[hidden],
+  .catalog__academic-area[hidden],
+  .catalog__course[hidden] {
+    display: none;
+  }
+  .catalog__section-header {
+    display: grid;
+    gap: var(--space-6);
+    align-items: end;
+    margin-bottom: clamp(3.5rem, 7vw, 6rem);
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--color-line-strong);
+  }
+  .catalog__section-header h2 {
+    max-width: 12ch;
+    margin: 0.7rem 0 0;
+    font-size: clamp(2.7rem, 6vw, 5.5rem);
+  }
+  .catalog__academic-areas {
+    display: grid;
+    gap: clamp(7rem, 14vw, 12rem);
+  }
+  .catalog__area-header {
+    display: grid;
+    gap: var(--space-6);
+    align-items: end;
+    margin-bottom: clamp(3.5rem, 7vw, 6rem);
+    padding: clamp(2rem, 5vw, 4rem);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--color-glow), transparent 56%), var(--color-surface);
+  }
+  .catalog__area-header h3 {
+    max-width: 12ch;
+    margin: 0.7rem 0 0;
+    font-size: clamp(2.4rem, 5vw, 4.6rem);
+  }
+  .catalog__courses {
+    display: grid;
+    gap: clamp(4rem, 8vw, 7rem);
+  }
+  .catalog__personal-featured {
+    margin-bottom: var(--space-6);
+  }
+  .catalog__personal-columns {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+  .catalog__personal-column {
+    display: contents;
+  }
+  .catalog__personal-item {
+    order: var(--project-order);
+  }
+  [data-personal-grid-item][hidden] {
+    display: none;
+  }
+  .catalog__course-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+  .catalog__course-title h4 {
+    margin: 0;
+    font-size: clamp(1.5rem, 3vw, 2.3rem);
+  }
+  .catalog__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-6);
+  }
+  @media (min-width: 52rem) {
+    .catalog-hero__grid,
+    .catalog__section-header,
+    .catalog__area-header {
+      grid-template-columns: minmax(0, 1.2fr) minmax(20rem, 0.8fr);
+    }
+    .catalog__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .catalog__personal-columns {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+    .catalog__personal-column {
+      display: flex;
+      min-width: 0;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+    .catalog__personal-item {
+      order: initial;
+    }
+  }
+</style>

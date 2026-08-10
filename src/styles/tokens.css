@@ -1,0 +1,75 @@
+:root {
+  color-scheme: dark;
+
+  --font-display: 'Manrope Variable', 'Arial Nova', system-ui, sans-serif;
+  --font-body: 'Inter Variable', Inter, system-ui, sans-serif;
+  --font-mono: 'Cascadia Code', 'SFMono-Regular', Consolas, monospace;
+
+  --ink-000: #ffffff;
+  --ink-050: #f5f8ff;
+  --ink-100: #e8eef8;
+  --ink-200: #cbd6e8;
+  --ink-400: #8291aa;
+  --ink-600: #42516a;
+  --ink-800: #172235;
+  --ink-900: #0a1220;
+  --ink-950: #03070d;
+
+  --blue-100: #dce9ff;
+  --blue-300: #8eb9ff;
+  --blue-400: #5c9dff;
+  --blue-500: #2f7eff;
+  --blue-600: #155de8;
+  --blue-700: #1043a8;
+  --blue-900: #071b45;
+
+  --color-background: var(--ink-950);
+  --color-surface: rgba(10, 18, 32, 0.78);
+  --color-surface-solid: var(--ink-900);
+  --color-surface-elevated: #101b2e;
+  --color-text: var(--ink-050);
+  --color-text-muted: #a9b7cc;
+  --color-line: rgba(142, 185, 255, 0.2);
+  --color-line-strong: rgba(142, 185, 255, 0.42);
+  --color-accent: var(--blue-400);
+  --color-accent-strong: var(--blue-300);
+  --color-focus: var(--blue-300);
+  --color-glow: rgba(47, 126, 255, 0.28);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+
+  --radius-sm: 0.35rem;
+  --radius-md: 0.8rem;
+  --radius-lg: 1.25rem;
+  --container: 74rem;
+  --reading-width: 45rem;
+  --header-height: 4.75rem;
+  --transition-fast: 150ms ease;
+  --transition-base: 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --shadow-panel: 0 24px 80px rgba(0, 0, 0, 0.34);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --color-background: #f4f7fb;
+  --color-surface: rgba(255, 255, 255, 0.82);
+  --color-surface-solid: #ffffff;
+  --color-surface-elevated: #eaf0f8;
+  --color-text: #08111f;
+  --color-text-muted: #4e5e75;
+  --color-line: rgba(16, 67, 168, 0.16);
+  --color-line-strong: rgba(16, 67, 168, 0.34);
+  --color-accent: #155de8;
+  --color-accent-strong: #1043a8;
+  --color-focus: #155de8;
+  --color-glow: rgba(21, 93, 232, 0.16);
+  --shadow-panel: 0 24px 70px rgba(23, 34, 53, 0.12);
+}

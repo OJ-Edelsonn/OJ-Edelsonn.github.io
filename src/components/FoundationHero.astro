@@ -1,0 +1,400 @@
+---
+import { SITE, type Locale } from '../config/site';
+import { getRoute, withBase } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const content = {
+  es: {
+    eyebrow: 'Ingeniería Empresarial y de Sistemas / Lima · Perú',
+    titleLead: 'Datos, procesos',
+    titleEnd: 'y tecnología para mejores decisiones.',
+    description:
+      'Estudiante de Ingeniería Empresarial y de Sistemas orientado a Análisis de Datos, BI, Inteligencia Comercial, procesos y consultoría.',
+    primary: 'Explorar proyectos',
+    secondary: 'Descargar CV',
+    tertiary: 'Conversemos',
+    status: 'Portafolio activo',
+    panelTitle: 'Áreas de enfoque',
+    areas: ['Data & BI', 'Procesos', 'Sistemas'],
+  },
+  en: {
+    eyebrow: 'Business and Systems Engineering / Lima · Peru',
+    titleLead: 'Data, processes',
+    titleEnd: 'and technology for better decisions.',
+    description:
+      'Business and Systems Engineering student focused on Data Analytics, BI, Commercial Intelligence, processes, and consulting.',
+    primary: 'Explore projects',
+    secondary: 'Download resume',
+    tertiary: 'Let’s talk',
+    status: 'Portfolio online',
+    panelTitle: 'Focus areas',
+    areas: ['Data & BI', 'Processes', 'Systems'],
+  },
+}[locale];
+---
+
+<section class="foundation-hero">
+  <div class="container foundation-hero__grid">
+    <div class="foundation-hero__copy">
+      <p class="eyebrow">{content.eyebrow}</p>
+      <h1>
+        {content.titleLead}
+        <span>{content.titleEnd}</span>
+      </h1>
+      <p class="foundation-hero__description">{content.description}</p>
+      <div class="foundation-hero__actions">
+        <a class="button button--primary" href={withBase(getRoute('projects', locale))}>
+          {content.primary}<span aria-hidden="true">↗</span>
+        </a>
+        <a class="button button--secondary" href={withBase(SITE.resumePath)} download>
+          {content.secondary}
+        </a>
+        <a class="foundation-hero__text-link" href={withBase(getRoute('contact', locale))}>
+          {content.tertiary}<span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <aside class="system-card" aria-label={content.panelTitle}>
+      <div class="system-card__header">
+        <span>EO.SYS / 26</span>
+        <span class="system-card__status">{content.status}</span>
+      </div>
+      <div class="system-card__core">
+        <span class="system-card__axis">Y</span>
+        <div class="system-card__radar" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <span class="system-card__axis">X</span>
+      </div>
+      <div class="system-card__footer">
+        <p>{content.panelTitle}</p>
+        <ol>
+          {
+            content.areas.map((area, index) => (
+              <li>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                {area}
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .foundation-hero {
+    position: relative;
+    min-height: calc(100svh - var(--header-height));
+    display: grid;
+    align-items: center;
+    padding-block: clamp(4rem, 9vw, 8rem);
+  }
+
+  .foundation-hero::before {
+    content: 'EO—26';
+    position: absolute;
+    z-index: -1;
+    top: 5%;
+    left: max(1rem, calc((100vw - var(--container)) / 2));
+    color: transparent;
+    font-family: var(--font-display);
+    font-size: clamp(7rem, 21vw, 19rem);
+    font-weight: 800;
+    letter-spacing: -0.09em;
+    line-height: 0.8;
+    -webkit-text-stroke: 1px var(--color-line);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  .foundation-hero__grid {
+    display: grid;
+    gap: clamp(3rem, 8vw, 7rem);
+  }
+
+  .foundation-hero__copy {
+    align-self: center;
+  }
+
+  .foundation-hero h1 {
+    max-width: 12ch;
+    margin-block: 1.2rem 1.5rem;
+    font-size: clamp(3.2rem, 7.8vw, 7.6rem);
+    font-weight: 680;
+  }
+
+  .foundation-hero h1 span {
+    display: block;
+    color: var(--color-text-muted);
+    font-weight: 420;
+  }
+
+  .foundation-hero__description {
+    max-width: 39rem;
+    color: var(--color-text-muted);
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+  }
+
+  .foundation-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-8);
+  }
+
+  .foundation-hero__text-link {
+    display: inline-flex;
+    min-height: 3rem;
+    align-items: center;
+    gap: 0.5rem;
+    padding-inline: 0.35rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .foundation-hero__text-link:hover {
+    color: var(--color-accent-strong);
+  }
+
+  .button {
+    display: inline-flex;
+    min-height: 3rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    padding: 0.65rem 1.1rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    font-weight: 650;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition:
+      transform var(--transition-base),
+      background var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .button:hover {
+    transform: translateY(-2px);
+  }
+
+  .button--primary {
+    border-color: var(--blue-500);
+    background: var(--blue-600);
+    color: var(--ink-000);
+    box-shadow: 0 0 2.5rem var(--color-glow);
+  }
+
+  .button--primary:hover {
+    background: var(--blue-500);
+  }
+
+  .button--secondary {
+    background: var(--color-surface);
+  }
+
+  .button--secondary:hover {
+    background: var(--color-glow);
+  }
+
+  .system-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 29rem;
+    padding: var(--space-4);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(140deg, var(--color-glow), transparent 32%), var(--color-surface);
+    box-shadow: var(--shadow-panel);
+    backdrop-filter: blur(18px);
+    clip-path: polygon(
+      0 0,
+      calc(100% - 2rem) 0,
+      100% 2rem,
+      100% 100%,
+      2rem 100%,
+      0 calc(100% - 2rem)
+    );
+  }
+
+  .system-card::before,
+  .system-card::after {
+    content: '';
+    position: absolute;
+    background: var(--color-accent);
+    opacity: 0.8;
+  }
+
+  .system-card::before {
+    top: 0;
+    left: 1.5rem;
+    width: 5rem;
+    height: 2px;
+  }
+
+  .system-card::after {
+    right: 0;
+    bottom: 1.5rem;
+    width: 2px;
+    height: 5rem;
+  }
+
+  .system-card__header {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .system-card__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--color-accent-strong);
+  }
+
+  .system-card__status::before {
+    content: '';
+    width: 0.4rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 0.8rem currentColor;
+  }
+
+  .system-card__core {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 17rem;
+    padding-block: var(--space-8);
+  }
+
+  .system-card__axis {
+    color: var(--color-line-strong);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+  }
+
+  .system-card__radar {
+    position: relative;
+    width: min(100%, 14rem);
+    margin: auto;
+    aspect-ratio: 1;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 50%;
+    background:
+      linear-gradient(90deg, transparent 49.7%, var(--color-line) 50%, transparent 50.3%),
+      linear-gradient(transparent 49.7%, var(--color-line) 50%, transparent 50.3%),
+      radial-gradient(circle, var(--color-glow), transparent 65%);
+    box-shadow:
+      inset 0 0 4rem var(--color-glow),
+      0 0 4rem var(--color-glow);
+  }
+
+  .system-card__radar::before,
+  .system-card__radar::after,
+  .system-card__radar span {
+    content: '';
+    position: absolute;
+    border: 1px solid var(--color-line);
+    border-radius: 50%;
+  }
+
+  .system-card__radar::before {
+    inset: 22%;
+  }
+
+  .system-card__radar::after {
+    inset: 42%;
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    box-shadow: 0 0 1.5rem var(--color-accent);
+  }
+
+  .system-card__radar span:nth-child(1) {
+    inset: 8%;
+  }
+
+  .system-card__radar span:nth-child(2) {
+    inset: 32%;
+  }
+
+  .system-card__radar span:nth-child(3) {
+    inset: 0;
+    border-color: transparent;
+    background: conic-gradient(from 20deg, var(--color-glow), transparent 18%);
+    animation: radar 8s linear infinite;
+  }
+
+  .system-card__footer {
+    display: grid;
+    gap: var(--space-3);
+    border-top: 1px solid var(--color-line);
+    padding-top: var(--space-4);
+  }
+
+  .system-card__footer p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .system-card__footer ol {
+    display: grid;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .system-card__footer li {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 0.88rem;
+  }
+
+  .system-card__footer li span {
+    color: var(--color-accent-strong);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+  }
+
+  @keyframes radar {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  @media (min-width: 58rem) {
+    .foundation-hero__grid {
+      grid-template-columns: minmax(0, 1.45fr) minmax(18rem, 0.55fr);
+      align-items: center;
+    }
+  }
+</style>
