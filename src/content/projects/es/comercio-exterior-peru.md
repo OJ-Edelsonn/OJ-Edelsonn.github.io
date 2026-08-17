@@ -15,15 +15,15 @@ priority: 1
 date: 2026-06-19
 technologies: [Python, pandas, SQL Server, Power BI, DAX, Power Query]
 repositoryUrl: https://github.com/OJ-Edelsonn/Dashboard-comercio-exterior-peru-2024-2026
-coverImage: /images/projects/comercio-exterior/01_resumen_ejecutivo.webp
+coverImage: /images/projects/comercio-exterior/01_resumen_ejecutivo.png
 gallery:
-  - src: /images/projects/comercio-exterior/01_resumen_ejecutivo.webp
+  - src: /images/projects/comercio-exterior/01_resumen_ejecutivo.png
     alt: Resumen ejecutivo del dashboard de comercio exterior peruano.
     caption: Vista ejecutiva de exportaciones, importaciones y balanza comercial.
-  - src: /images/projects/comercio-exterior/02_detalle_comercial.webp
+  - src: /images/projects/comercio-exterior/02_detalle_comercial.png
     alt: Página de detalle comercial en Power BI.
     caption: Exploración por producto, país, empresa y flujo comercial.
-  - src: /images/projects/comercio-exterior/03_analisis_geografico_logistico.webp
+  - src: /images/projects/comercio-exterior/03_analisis_geografico_logistico.png
     alt: Página de análisis geográfico y logístico en Power BI.
     caption: Lectura territorial y logística de los movimientos registrados.
 role: Proyecto personal de analítica y Business Intelligence

@@ -15,15 +15,15 @@ priority: 1
 date: 2026-06-19
 technologies: [Python, pandas, SQL Server, Power BI, DAX, Power Query]
 repositoryUrl: https://github.com/OJ-Edelsonn/Dashboard-comercio-exterior-peru-2024-2026
-coverImage: /images/projects/comercio-exterior/01_resumen_ejecutivo.webp
+coverImage: /images/projects/comercio-exterior/01_resumen_ejecutivo.png
 gallery:
-  - src: /images/projects/comercio-exterior/01_resumen_ejecutivo.webp
+  - src: /images/projects/comercio-exterior/01_resumen_ejecutivo.png
     alt: Executive overview of the Peru foreign trade dashboard.
     caption: Executive view of exports, imports, and the trade balance.
-  - src: /images/projects/comercio-exterior/02_detalle_comercial.webp
+  - src: /images/projects/comercio-exterior/02_detalle_comercial.png
     alt: Trade detail page in Power BI.
     caption: Exploration by product, country, company, and trade flow.
-  - src: /images/projects/comercio-exterior/03_analisis_geografico_logistico.webp
+  - src: /images/projects/comercio-exterior/03_analisis_geografico_logistico.png
     alt: Geographic and logistics analysis page in Power BI.
     caption: Territorial and logistics view of the recorded movements.
 role: Personal analytics and Business Intelligence project

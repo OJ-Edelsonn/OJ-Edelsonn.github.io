@@ -22,6 +22,7 @@ const { project, locale, previous, next } = Astro.props;
 const secondaryGallery = project.data.gallery.filter(
   (item) => item.src !== project.data.coverImage,
 );
+const coverGalleryItem = project.data.gallery.find((item) => item.src === project.data.coverImage);
 const copy =
   locale === 'es'
     ? {
@@ -45,6 +46,10 @@ const copy =
         next: 'Siguiente caso',
         back: 'Todos los proyectos',
         newTab: '(abre en una pestaña nueva)',
+        enlarge: 'Ampliar captura',
+        imagePreview: 'Vista ampliada de la captura del proyecto',
+        openOriginal: 'Abrir tamaño completo',
+        closePreview: 'Cerrar vista ampliada',
       }
     : {
         index: 'Professional case',
@@ -67,6 +72,10 @@ const copy =
         next: 'Next case',
         back: 'All projects',
         newTab: '(opens in a new tab)',
+        enlarge: 'Enlarge screenshot',
+        imagePreview: 'Expanded project screenshot',
+        openOriginal: 'Open full size',
+        closePreview: 'Close expanded view',
       };
 
 const projectsIndex = locale === 'es' ? '/es/proyectos/' : '/en/projects/';
@@ -150,14 +159,27 @@ const projectsIndex = locale === 'es' ? '/es/proyectos/' : '/en/projects/';
   {
     project.data.coverImage && (
       <div class="container case-cover">
-        <img
-          src={withBase(project.data.coverImage)}
-          alt={project.data.gallery[0]?.alt ?? ''}
-          width="1600"
-          height="900"
-          decoding="async"
-          fetchpriority="high"
-        />
+        <button
+          class="case-image-button"
+          type="button"
+          data-case-image-trigger
+          data-image-src={withBase(project.data.coverImage)}
+          data-image-alt={coverGalleryItem?.alt ?? ''}
+          data-image-caption={coverGalleryItem?.caption ?? ''}
+          aria-label={`${copy.enlarge}: ${coverGalleryItem?.alt ?? project.data.title}`}
+        >
+          <img
+            src={withBase(project.data.coverImage)}
+            alt={coverGalleryItem?.alt ?? ''}
+            width="1600"
+            height="900"
+            decoding="async"
+            fetchpriority="high"
+          />
+          <span class="case-image-button__hint" aria-hidden="true">
+            {copy.enlarge} <span>↗</span>
+          </span>
+        </button>
       </div>
     )
   }
@@ -272,14 +294,27 @@ const projectsIndex = locale === 'es' ? '/es/proyectos/' : '/en/projects/';
                   'case-gallery__wide': index === 0 && secondaryGallery.length % 2 === 1,
                 }}
               >
-                <img
-                  src={withBase(item.src)}
-                  alt={item.alt}
-                  width="1600"
-                  height="900"
-                  loading="lazy"
-                  decoding="async"
-                />
+                <button
+                  class="case-image-button"
+                  type="button"
+                  data-case-image-trigger
+                  data-image-src={withBase(item.src)}
+                  data-image-alt={item.alt}
+                  data-image-caption={item.caption ?? ''}
+                  aria-label={`${copy.enlarge}: ${item.alt}`}
+                >
+                  <img
+                    src={withBase(item.src)}
+                    alt={item.alt}
+                    width="1600"
+                    height="900"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span class="case-image-button__hint" aria-hidden="true">
+                    {copy.enlarge} <span>↗</span>
+                  </span>
+                </button>
                 {item.caption && (
                   <figcaption>
                     <span>{String(index + 2).padStart(2, '0')}</span>
@@ -324,6 +359,75 @@ const projectsIndex = locale === 'es' ? '/es/proyectos/' : '/en/projects/';
     }
   </nav>
 </article>
+
+<dialog class="case-lightbox" data-case-lightbox aria-label={copy.imagePreview}>
+  <div class="case-lightbox__toolbar">
+    <p data-case-lightbox-caption></p>
+    <div class="case-lightbox__actions">
+      <a
+        data-case-lightbox-original
+        href={withBase(project.data.coverImage ?? '/')}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {copy.openOriginal}
+        <span class="sr-only"> {copy.newTab}</span>
+        <span aria-hidden="true">↗</span>
+      </a>
+      <button type="button" data-case-lightbox-close aria-label={copy.closePreview}>×</button>
+    </div>
+  </div>
+  <div class="case-lightbox__viewport">
+    <img data-case-lightbox-image alt="" />
+  </div>
+</dialog>
+
+<script>
+  document.querySelectorAll('[data-case-lightbox]').forEach((dialogNode) => {
+    if (!(dialogNode instanceof HTMLDialogElement) || dialogNode.dataset.ready === 'true') return;
+
+    const article = dialogNode.previousElementSibling;
+    const image = dialogNode.querySelector('[data-case-lightbox-image]');
+    const caption = dialogNode.querySelector('[data-case-lightbox-caption]');
+    const originalLink = dialogNode.querySelector('[data-case-lightbox-original]');
+    const closeButton = dialogNode.querySelector('[data-case-lightbox-close]');
+
+    if (
+      !(image instanceof HTMLImageElement) ||
+      !(caption instanceof HTMLElement) ||
+      !(originalLink instanceof HTMLAnchorElement) ||
+      !(closeButton instanceof HTMLButtonElement)
+    )
+      return;
+
+    dialogNode.dataset.ready = 'true';
+
+    article?.querySelectorAll('[data-case-image-trigger]').forEach((triggerNode) => {
+      if (!(triggerNode instanceof HTMLButtonElement)) return;
+
+      triggerNode.addEventListener('click', () => {
+        const src = triggerNode.dataset.imageSrc ?? '';
+        const alt = triggerNode.dataset.imageAlt ?? '';
+        const description = triggerNode.dataset.imageCaption || alt;
+
+        image.src = src;
+        image.alt = alt;
+        caption.textContent = description;
+        originalLink.href = src;
+        dialogNode.showModal();
+      });
+    });
+
+    closeButton.addEventListener('click', () => dialogNode.close());
+    dialogNode.addEventListener('click', (event) => {
+      if (event.target === dialogNode) dialogNode.close();
+    });
+    dialogNode.addEventListener('close', () => {
+      image.removeAttribute('src');
+      image.alt = '';
+    });
+  });
+</script>
 
 <style>
   .case-hero {
@@ -372,7 +476,7 @@ const projectsIndex = locale === 'es' ? '/es/proyectos/' : '/en/projects/';
   }
   .case-cover {
     overflow: hidden;
-    aspect-ratio: 16 / 8.2;
+    aspect-ratio: 16 / 9;
     border: 1px solid var(--color-line-strong);
     border-radius: var(--radius-lg);
     background: var(--color-surface-elevated);
@@ -381,7 +485,47 @@ const projectsIndex = locale === 'es' ? '/es/proyectos/' : '/en/projects/';
   .case-cover img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+  }
+  .case-image-button {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: inherit;
+    color: inherit;
+    background: transparent;
+    cursor: zoom-in;
+  }
+  .case-image-button:focus-visible {
+    outline: 3px solid var(--color-accent-strong);
+    outline-offset: 4px;
+  }
+  .case-image-button__hint {
+    position: absolute;
+    right: var(--space-4);
+    bottom: var(--space-4);
+    display: inline-flex;
+    gap: var(--space-2);
+    align-items: center;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 999px;
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+    box-shadow: var(--shadow-panel);
+    backdrop-filter: blur(12px);
+    transition: transform var(--transition-fast);
+  }
+  .case-image-button:hover .case-image-button__hint {
+    transform: translateY(-2px);
   }
   .case-layout {
     display: grid;
@@ -505,12 +649,90 @@ const projectsIndex = locale === 'es' ? '/es/proyectos/' : '/en/projects/';
     margin: 0;
   }
   figure img {
+    display: block;
     width: 100%;
     aspect-ratio: 16 / 9;
-    object-fit: cover;
+    object-fit: contain;
     border: 1px solid var(--color-line);
     border-radius: var(--radius-md);
     background: var(--color-surface-elevated);
+  }
+  .case-lightbox {
+    width: min(96vw, 112rem);
+    max-width: none;
+    height: min(94vh, 74rem);
+    max-height: none;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-lg);
+    color: var(--color-text);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-panel);
+  }
+  .case-lightbox::backdrop {
+    background: rgb(2 8 23 / 86%);
+    backdrop-filter: blur(8px);
+  }
+  .case-lightbox__toolbar {
+    display: flex;
+    gap: var(--space-4);
+    align-items: center;
+    justify-content: space-between;
+    min-height: 4.5rem;
+    padding: var(--space-3) var(--space-5);
+    border-bottom: 1px solid var(--color-line);
+  }
+  .case-lightbox__toolbar p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+  }
+  .case-lightbox__actions {
+    display: flex;
+    flex: 0 0 auto;
+    gap: var(--space-3);
+    align-items: center;
+  }
+  .case-lightbox__actions a {
+    color: var(--color-accent-strong);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+  .case-lightbox__actions button {
+    display: grid;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 50%;
+    color: var(--color-text);
+    font-size: 1.5rem;
+    line-height: 1;
+    background: var(--color-surface-elevated);
+    cursor: pointer;
+    place-items: center;
+  }
+  .case-lightbox__viewport {
+    display: grid;
+    height: calc(100% - 4.5rem);
+    padding: clamp(0.75rem, 2vw, 2rem);
+    overflow: auto;
+    background: var(--color-bg);
+    place-items: center;
+  }
+  .case-lightbox__viewport img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 100%;
+    border: 1px solid var(--color-line);
+    background: white;
+    box-shadow: var(--shadow-panel);
   }
   figcaption {
     display: flex;
@@ -576,6 +798,28 @@ const projectsIndex = locale === 'es' ? '/es/proyectos/' : '/en/projects/';
     }
     .case-navigation__next {
       text-align: right;
+    }
+  }
+  @media (max-width: 40rem) {
+    .case-image-button__hint {
+      right: var(--space-3);
+      bottom: var(--space-3);
+      padding: 0.45rem 0.6rem;
+      font-size: 0.55rem;
+    }
+    .case-lightbox__toolbar {
+      align-items: flex-start;
+      min-height: 6.5rem;
+      padding: var(--space-3);
+    }
+    .case-lightbox__toolbar p {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+    .case-lightbox__viewport {
+      height: calc(100% - 6.5rem);
     }
   }
 </style>
