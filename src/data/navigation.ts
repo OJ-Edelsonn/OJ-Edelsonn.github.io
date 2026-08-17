@@ -6,6 +6,7 @@ export function getNavigation(locale: Locale) {
   const t = useTranslations(locale);
   const items: Array<{ key: RouteKey; label: string }> = [
     { key: 'projects', label: t.projects },
+    { key: 'credentials', label: t.credentials },
     { key: 'about', label: t.about },
     { key: 'insights', label: t.insights },
     { key: 'resume', label: t.resume },

@@ -3,6 +3,7 @@ import type { Locale } from '../config/site';
 export const routePairs = {
   home: { es: '/es/', en: '/en/' },
   projects: { es: '/es/proyectos/', en: '/en/projects/' },
+  credentials: { es: '/es/credenciales/', en: '/en/credentials/' },
   about: { es: '/es/sobre-mi/', en: '/en/about/' },
   insights: { es: '/es/publicaciones/', en: '/en/insights/' },
   resume: { es: '/es/cv/', en: '/en/resume/' },

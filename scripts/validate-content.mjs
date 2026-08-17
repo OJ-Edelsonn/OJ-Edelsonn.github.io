@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises';
+import { access, readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 
 const projectRoot = process.cwd();
@@ -152,6 +152,57 @@ for (const [translationKey, locales] of postPairs) {
 
 assert(postPairs.size === 3, `Expected 3 editorial draft pairs, found ${postPairs.size}`);
 
+const credentials = await entriesFor('src/content/credentials');
+const credentialPairs = new Map();
+const credentialCategoriesByLocale = {
+  es: { school: 0, university: 0, external: 0, achievement: 0 },
+  en: { school: 0, university: 0, external: 0, achievement: 0 },
+};
+
+for (const entry of credentials) {
+  const locale = field(entry.frontmatter, 'locale', entry.file);
+  const translationKey = field(entry.frontmatter, 'translationKey', entry.file);
+  const category = field(entry.frontmatter, 'category', entry.file);
+  const draft = field(entry.frontmatter, 'draft', entry.file);
+  const previewImage = field(entry.frontmatter, 'previewImage', entry.file);
+  const directoryLocale = path.basename(path.dirname(entry.file));
+
+  assert(locale === directoryLocale, `Credential locale/directory mismatch in ${entry.file}`);
+  assert(draft === 'false', `Published credential marked as draft in ${entry.file}`);
+  assert(
+    ['school', 'university', 'external', 'achievement'].includes(category),
+    `Unsupported credential category in ${entry.file}`,
+  );
+  assert(
+    previewImage.startsWith('/images/credentials/'),
+    `Credential preview is outside the public credential directory in ${entry.file}`,
+  );
+  await access(path.join(projectRoot, 'public', previewImage.slice(1)));
+
+  credentialCategoriesByLocale[locale][category] += 1;
+  const locales = credentialPairs.get(translationKey) ?? new Set();
+  locales.add(locale);
+  credentialPairs.set(translationKey, locales);
+}
+
+for (const [translationKey, locales] of credentialPairs) {
+  assert(
+    locales.has('es') && locales.has('en'),
+    `Incomplete credential translation pair: ${translationKey}`,
+  );
+}
+
+assert(credentialPairs.size === 5, `Expected 5 credential pairs, found ${credentialPairs.size}`);
+for (const locale of ['es', 'en']) {
+  assert(
+    credentialCategoriesByLocale[locale].school === 1 &&
+      credentialCategoriesByLocale[locale].university === 1 &&
+      credentialCategoriesByLocale[locale].external === 1 &&
+      credentialCategoriesByLocale[locale].achievement === 2,
+    `Unexpected credential category distribution for ${locale}`,
+  );
+}
+
 console.log(
-  `Content validated: ${projectPairs.size} project pairs, ${postPairs.size} draft post pairs.`,
+  `Content validated: ${projectPairs.size} project pairs, ${postPairs.size} draft post pairs, ${credentialPairs.size} credential pairs.`,
 );

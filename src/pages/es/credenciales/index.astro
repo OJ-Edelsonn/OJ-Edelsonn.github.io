@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import CredentialsPage from '../../../components/CredentialsPage.astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const credentials = (
+  await getCollection('credentials', ({ data }) => data.locale === 'es' && !data.draft)
+).sort((a, b) => a.data.priority - b.data.priority);
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Credenciales de Edelson Anghuelo Orihuela Jara',
+  numberOfItems: credentials.length,
+  itemListElement: credentials.map((credential, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: credential.data.title,
+    description: credential.data.summary,
+  })),
+};
+---
+
+<BaseLayout
+  locale="es"
+  routeKey="credentials"
+  title="Credenciales — Edelson Orihuela"
+  description="Certificados, formación complementaria y logros académicos documentados de Edelson Anghuelo Orihuela Jara."
+  structuredData={structuredData}
+>
+  <CredentialsPage locale="es" credentials={credentials} />
+</BaseLayout>

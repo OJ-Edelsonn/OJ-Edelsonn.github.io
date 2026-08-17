@@ -23,6 +23,7 @@ const t = useTranslations(locale);
       <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
       <a href={SITE.github} rel="me">GitHub</a>
       <a href={SITE.linkedin} rel="me">LinkedIn</a>
+      <a href={withBase(getRoute('credentials', locale))}>{t.credentials}</a>
       <a href={withBase(getRoute('contact', locale))}>{t.contact}</a>
     </div>
   </div>

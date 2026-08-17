@@ -16,6 +16,7 @@ Thumbs.db
 .idea/
 .vscode/
 tmp/
+private/
 
 # local coding-agent instructions
 AGENTS.md

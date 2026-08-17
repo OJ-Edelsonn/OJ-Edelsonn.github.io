@@ -102,6 +102,7 @@ const copy =
         principle:
           'Prefiero una solución trazable y bien explicada a una afirmación espectacular sin evidencia. Por eso cada caso separa resultados verificables, datos simulados y limitaciones.',
         projects: 'Explorar proyectos',
+        credentials: 'Ver credenciales',
         resume: 'Ver CV',
       }
     : {
@@ -197,6 +198,7 @@ const copy =
         principle:
           'I prefer a traceable, well-explained solution over a spectacular claim without evidence. Each case therefore separates verifiable results, simulated data, and limitations.',
         projects: 'Explore projects',
+        credentials: 'View credentials',
         resume: 'View resume',
       };
 ---
@@ -299,6 +301,9 @@ const copy =
   >
     <a class="button button--primary" href={withBase(getRoute('projects', locale))}
       >{copy.projects}<span aria-hidden="true">↗</span></a
+    >
+    <a class="button button--secondary" href={withBase(getRoute('credentials', locale))}
+      >{copy.credentials}</a
     >
     <a class="button button--secondary" href={withBase(getRoute('resume', locale))}>{copy.resume}</a
     >

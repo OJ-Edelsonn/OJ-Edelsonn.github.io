@@ -48,6 +48,12 @@ for (const file of htmlFiles) {
   const localized = relative.startsWith('es/') || relative.startsWith('en/');
 
   assert(!html.includes('http://localhost'), `Localhost URL leaked into ${relative}`);
+  assert(
+    !/(?:DNI|C[oó]digo(?: de admisi[oó]n)?|certificate number|admission code)[^<]{0,48}\d{6,}/i.test(
+      html,
+    ),
+    `Possible private credential identifier leaked into ${relative}`,
+  );
   if (relative !== 'index.html') {
     assert(/<title>[^<]+<\/title>/i.test(html), `Missing title in ${relative}`);
     assert(hasMeta(html, 'name', 'description'), `Missing description in ${relative}`);
@@ -116,6 +122,10 @@ for (const locale of ['es', 'en']) {
     path.join(dist, locale, locale === 'es' ? 'proyectos' : 'projects', 'index.html'),
     'utf8',
   );
+  const credentials = await readFile(
+    path.join(dist, locale, locale === 'es' ? 'credenciales' : 'credentials', 'index.html'),
+    'utf8',
+  );
 
   assert(matches(home, /data-project-card/g) === 7, `Expected 7 featured cards on ${locale} home`);
   assert(
@@ -154,6 +164,14 @@ for (const locale of ['es', 'en']) {
   assert(
     catalog.indexOf('data-career-area="business"') < catalog.indexOf('data-career-area="systems"'),
     `Academic career areas are out of order in ${locale} catalog`,
+  );
+  assert(
+    matches(credentials, /data-credential-card/g) === 5,
+    `Expected 5 credential cards in ${locale} credential archive`,
+  );
+  assert(
+    matches(credentials, /data-credential-category/g) === 4,
+    `Expected 4 categories in ${locale} credential archive`,
   );
 }
 

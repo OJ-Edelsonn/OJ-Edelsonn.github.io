@@ -71,4 +71,30 @@ const posts = defineCollection({
   }),
 });
 
-export const collections = { projects, posts };
+const credentials = defineCollection({
+  loader: glob({
+    pattern: '**/*.{md,mdx}',
+    base: './src/content/credentials',
+    generateId: ({ data }) => `${String(data.locale)}-${String(data.credentialId)}`,
+  }),
+  schema: z.object({
+    credentialId: z.string().min(1),
+    translationKey: z.string().min(1),
+    title: z.string().min(1),
+    locale,
+    issuer: z.string().min(1),
+    category: z.enum(['school', 'university', 'external', 'achievement']),
+    credentialType: z.enum(['certificate', 'completion', 'admission']),
+    date: z.coerce.date(),
+    period: z.string().optional(),
+    summary: z.string().min(1),
+    highlights: z.array(z.string()).default([]),
+    previewImage: z.string().min(1),
+    previewAlt: z.string().min(1),
+    privacyNote: z.string().min(1),
+    priority: z.number().int().nonnegative().default(0),
+    draft: z.boolean().default(true),
+  }),
+});
+
+export const collections = { projects, posts, credentials };
