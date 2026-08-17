@@ -378,7 +378,11 @@ const projectsIndex = locale === 'es' ? '/es/proyectos/' : '/en/projects/';
     </div>
   </div>
   <div class="case-lightbox__viewport">
-    <img data-case-lightbox-image alt="" />
+    <img
+      data-case-lightbox-image
+      src={withBase(project.data.coverImage ?? '/og.png')}
+      alt={coverGalleryItem?.alt ?? project.data.title}
+    />
   </div>
 </dialog>
 
