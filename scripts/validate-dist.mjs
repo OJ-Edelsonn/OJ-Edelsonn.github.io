@@ -173,6 +173,14 @@ for (const locale of ['es', 'en']) {
     matches(credentials, /data-credential-category/g) === 4,
     `Expected 4 categories in ${locale} credential archive`,
   );
+  assert(
+    matches(credentials, /data-grades-table/g) === 1,
+    `Expected one secondary-school grade table in ${locale} credential archive`,
+  );
+  assert(
+    matches(credentials, /data-grade-row/g) === 11,
+    `Expected 11 subject rows in ${locale} secondary-school grade table`,
+  );
 }
 
 const assets = await Promise.all(

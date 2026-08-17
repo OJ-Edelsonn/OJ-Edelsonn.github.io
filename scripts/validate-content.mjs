@@ -193,6 +193,21 @@ for (const [translationKey, locales] of credentialPairs) {
 }
 
 assert(credentialPairs.size === 5, `Expected 5 credential pairs, found ${credentialPairs.size}`);
+const secondarySchoolCredentials = credentials.filter(
+  (entry) => field(entry.frontmatter, 'translationKey', entry.file) === 'coar-secondary-studies',
+);
+assert(
+  secondarySchoolCredentials.length === 2,
+  'The secondary-school credential translation pair is incomplete',
+);
+assert(
+  secondarySchoolCredentials.every(
+    (entry) =>
+      /gradeYears:\s*\[2014, 2015, 2016, 2017, 2018\]/.test(entry.frontmatter) &&
+      (entry.frontmatter.match(/^\s+- subject:/gm) ?? []).length === 11,
+  ),
+  'The secondary-school grade history is incomplete',
+);
 for (const locale of ['es', 'en']) {
   assert(
     credentialCategoriesByLocale[locale].school === 1 &&

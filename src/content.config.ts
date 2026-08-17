@@ -92,6 +92,15 @@ const credentials = defineCollection({
     previewImage: z.string().min(1),
     previewAlt: z.string().min(1),
     privacyNote: z.string().min(1),
+    gradeYears: z.array(z.number().int()).default([]),
+    grades: z
+      .array(
+        z.object({
+          subject: z.string().min(1),
+          scores: z.array(z.number().int().min(0).max(20)),
+        }),
+      )
+      .default([]),
     priority: z.number().int().nonnegative().default(0),
     draft: z.boolean().default(true),
   }),

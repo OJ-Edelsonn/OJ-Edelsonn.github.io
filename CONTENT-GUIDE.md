@@ -66,7 +66,7 @@ revisarse antes de cambiar un artículo a `draft: false`.
 
 ## 7. Reemplazar el CV
 
-Reemplaza `public/cv/Edelson_Orihuela_CV.pdf` conservando el nombre. La ruta se
+Reemplaza `public/cv/CV_Edelson_Orihuela_Jara.pdf` conservando el nombre. La ruta se
 configura una sola vez mediante `SITE.resumePath` en `src/config/site.ts`.
 
 Antes de publicar una nueva versión, revisa los datos personales incluidos en

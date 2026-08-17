@@ -4,7 +4,7 @@ export const SITE = {
   email: 'eoj.secu@gmail.com',
   github: 'https://github.com/OJ-Edelsonn',
   linkedin: 'https://www.linkedin.com/in/edelson-anghuelo-orihuela-jara-07b299329/',
-  resumePath: '/cv/Edelson_Orihuela_CV.pdf',
+  resumePath: '/cv/CV_Edelson_Orihuela_Jara.pdf',
   defaultLocale: 'es',
   locales: ['es', 'en'],
 } as const;
