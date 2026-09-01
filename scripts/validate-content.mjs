@@ -103,11 +103,11 @@ for (const [translationKey, locales] of projectPairs) {
   );
 }
 
-assert(projectPairs.size === 19, `Expected 19 unique projects, found ${projectPairs.size}`);
+assert(projectPairs.size === 20, `Expected 20 unique projects, found ${projectPairs.size}`);
 assert(featuredByLocale.es === 7, `Expected 7 featured ES projects, found ${featuredByLocale.es}`);
 assert(featuredByLocale.en === 7, `Expected 7 featured EN projects, found ${featuredByLocale.en}`);
-assert(personalByLocale.es === 7, `Expected 7 personal ES projects, found ${personalByLocale.es}`);
-assert(personalByLocale.en === 7, `Expected 7 personal EN projects, found ${personalByLocale.en}`);
+assert(personalByLocale.es === 8, `Expected 8 personal ES projects, found ${personalByLocale.es}`);
+assert(personalByLocale.en === 8, `Expected 8 personal EN projects, found ${personalByLocale.en}`);
 assert(
   academicAreasByLocale.es.business === 2 && academicAreasByLocale.en.business === 2,
   'Expected 2 academic projects per locale in the Business area',
@@ -192,7 +192,7 @@ for (const [translationKey, locales] of credentialPairs) {
   );
 }
 
-assert(credentialPairs.size === 5, `Expected 5 credential pairs, found ${credentialPairs.size}`);
+assert(credentialPairs.size === 6, `Expected 6 credential pairs, found ${credentialPairs.size}`);
 const secondarySchoolCredentials = credentials.filter(
   (entry) => field(entry.frontmatter, 'translationKey', entry.file) === 'coar-secondary-studies',
 );
@@ -212,7 +212,7 @@ for (const locale of ['es', 'en']) {
   assert(
     credentialCategoriesByLocale[locale].school === 1 &&
       credentialCategoriesByLocale[locale].university === 1 &&
-      credentialCategoriesByLocale[locale].external === 1 &&
+      credentialCategoriesByLocale[locale].external === 2 &&
       credentialCategoriesByLocale[locale].achievement === 2,
     `Unexpected credential category distribution for ${locale}`,
   );

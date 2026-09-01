@@ -122,8 +122,10 @@ const copy =
     min-width: 0;
   }
   h1 {
+    max-width: 100%;
     margin: 1rem 0 0;
-    font-size: clamp(3.2rem, 10vw, 9rem);
+    font-size: clamp(3.2rem, 6.6vw, 7rem);
+    line-height: 0.9;
   }
   .insights-hero__grid > div:last-child p {
     max-width: 42rem;
@@ -228,9 +230,6 @@ const copy =
     padding-bottom: clamp(5rem, 10vw, 9rem);
   }
   @media (min-width: 52rem) {
-    .insights-hero__grid {
-      grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.85fr);
-    }
     .drafts__grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -239,6 +238,12 @@ const copy =
     }
     .editorial__panel {
       grid-template-columns: minmax(0, 1fr) minmax(22rem, 1fr);
+    }
+  }
+  @media (min-width: 64rem) {
+    .insights-hero__grid {
+      grid-template-columns: minmax(0, 1.25fr) minmax(24rem, 0.75fr);
+      column-gap: clamp(3rem, 6vw, 7rem);
     }
   }
 </style>

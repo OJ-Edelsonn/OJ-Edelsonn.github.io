@@ -44,9 +44,19 @@ const schema = {
       '@type': 'Person',
       '@id': personId,
       name: SITE.name,
-      url: homeUrl.href,
-      email: `mailto:${SITE.email}`,
+      url: SITE.portfolio,
+      email: [`mailto:${SITE.email}`, `mailto:${SITE.institutionalEmail}`],
+      telephone: SITE.phones.map((phone) => phone.display),
       sameAs: [SITE.github, SITE.linkedin],
+      affiliation: {
+        '@type': 'CollegeOrUniversity',
+        name: SITE.university,
+      },
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Lima',
+        addressCountry: 'PE',
+      },
       jobTitle:
         locale === 'es'
           ? 'Estudiante de Ingeniería Empresarial y de Sistemas'

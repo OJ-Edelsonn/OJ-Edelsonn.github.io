@@ -16,6 +16,14 @@ const copy =
         availability:
           'Disponible para conversar sobre prácticas preprofesionales en Lima, modalidad híbrida, presencial o remota.',
         direct: 'Canales directos',
+        location: 'Ubicación',
+        university: 'Universidad',
+        professionalEmail: 'Correo profesional',
+        institutionalEmail: 'Correo institucional',
+        primaryWhatsApp: 'WhatsApp principal',
+        secondaryWhatsApp: 'WhatsApp alternativo',
+        portfolio: 'Portafolio',
+        openWhatsApp: 'Escribir por WhatsApp',
         form: 'Preparar correo',
         name: 'Nombre',
         email: 'Correo',
@@ -35,6 +43,14 @@ const copy =
         availability:
           'Available to discuss pre-professional internships in Lima, in hybrid, on-site, or remote settings.',
         direct: 'Direct channels',
+        location: 'Location',
+        university: 'University',
+        professionalEmail: 'Professional email',
+        institutionalEmail: 'University email',
+        primaryWhatsApp: 'Primary WhatsApp',
+        secondaryWhatsApp: 'Alternate WhatsApp',
+        portfolio: 'Portfolio',
+        openWhatsApp: 'Message on WhatsApp',
         form: 'Prepare email',
         name: 'Name',
         email: 'Email',
@@ -64,11 +80,59 @@ const copy =
       <aside class="contact-channels">
         <p class="eyebrow">01 / {copy.direct}</p><h2>{copy.direct}</h2>
         <ul>
-          <li><span>Email</span><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
           <li>
-            <span>LinkedIn</span><a href={SITE.linkedin} rel="me">edelson-anghuelo-orihuela-jara</a>
+            <span>{copy.location}</span>
+            <p>{SITE.location}</p>
           </li>
-          <li><span>GitHub</span><a href={SITE.github} rel="me">OJ-Edelsonn</a></li>
+          <li>
+            <span>{copy.university}</span>
+            <p>{SITE.university}</p>
+          </li>
+          <li>
+            <span>{copy.professionalEmail}</span>
+            <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+          </li>
+          <li>
+            <span>{copy.institutionalEmail}</span>
+            <a href={`mailto:${SITE.institutionalEmail}`}>{SITE.institutionalEmail}</a>
+          </li>
+          <li>
+            <span>{copy.primaryWhatsApp}</span>
+            <a
+              href={SITE.phones[0].whatsapp}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={`${copy.openWhatsApp}: ${SITE.phones[0].display}`}
+            >
+              {SITE.phones[0].display}<small>WhatsApp ↗</small>
+            </a>
+          </li>
+          <li>
+            <span>{copy.secondaryWhatsApp}</span>
+            <a
+              href={SITE.phones[1].whatsapp}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={`${copy.openWhatsApp}: ${SITE.phones[1].display}`}
+            >
+              {SITE.phones[1].display}<small>WhatsApp ↗</small>
+            </a>
+          </li>
+          <li>
+            <span>GitHub</span><a href={SITE.github} target="_blank" rel="me noopener noreferrer"
+              >OJ-Edelsonn ↗</a
+            >
+          </li>
+          <li>
+            <span>LinkedIn</span><a
+              href={SITE.linkedin}
+              target="_blank"
+              rel="me noopener noreferrer">Edelson Anghuelo Orihuela Jara ↗</a
+            >
+          </li>
+          <li>
+            <span>{copy.portfolio}</span><a href={SITE.portfolio}>oj-edelsonn.github.io</a>
+          </li>
         </ul>
       </aside>
 
@@ -172,8 +236,10 @@ const copy =
     min-width: 0;
   }
   h1 {
+    max-width: 100%;
     margin: 1rem 0 0;
-    font-size: clamp(3.2rem, 10vw, 9rem);
+    font-size: clamp(3.2rem, 6.6vw, 7rem);
+    line-height: 0.9;
   }
   .contact-hero__grid > div:last-child > p {
     max-width: 42rem;
@@ -239,8 +305,24 @@ const copy =
     text-transform: uppercase;
   }
   .contact-channels a {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.4rem var(--space-3);
     overflow-wrap: anywhere;
     text-decoration: none;
+  }
+  .contact-channels li > p {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+  .contact-channels small {
+    color: var(--color-accent-strong);
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
   .contact-channels a:hover {
     color: var(--color-accent-strong);
@@ -304,9 +386,6 @@ const copy =
     color: var(--color-accent-strong);
   }
   @media (min-width: 52rem) {
-    .contact-hero__grid {
-      grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.85fr);
-    }
     .contact-content__grid {
       grid-template-columns: minmax(18rem, 0.7fr) minmax(0, 1.3fr);
       align-items: start;
@@ -319,6 +398,12 @@ const copy =
     }
     .form-footer {
       grid-template-columns: minmax(0, 1fr) auto;
+    }
+  }
+  @media (min-width: 64rem) {
+    .contact-hero__grid {
+      grid-template-columns: minmax(0, 1.25fr) minmax(24rem, 0.75fr);
+      column-gap: clamp(3rem, 6vw, 7rem);
     }
   }
 </style>

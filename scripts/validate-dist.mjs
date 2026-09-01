@@ -141,8 +141,8 @@ for (const locale of ['es', 'en']) {
     `Expected personal and academic sections in ${locale} catalog`,
   );
   assert(
-    matches(catalog, /data-project-card[^>]+data-project-kind="personal"/g) === 7,
-    `Expected 7 personal cards in ${locale} catalog`,
+    matches(catalog, /data-project-card[^>]+data-project-kind="personal"/g) === 8,
+    `Expected 8 personal cards in ${locale} catalog`,
   );
   assert(
     matches(catalog, /data-project-card[^>]+data-project-kind="academic"/g) === 12,
@@ -166,8 +166,8 @@ for (const locale of ['es', 'en']) {
     `Academic career areas are out of order in ${locale} catalog`,
   );
   assert(
-    matches(credentials, /data-credential-card/g) === 5,
-    `Expected 5 credential cards in ${locale} credential archive`,
+    matches(credentials, /data-credential-card/g) === 6,
+    `Expected 6 credential cards in ${locale} credential archive`,
   );
   assert(
     matches(credentials, /data-credential-category/g) === 4,

@@ -10,7 +10,7 @@ careerArea: systems
 projectType: personal
 collaboration: individual
 status: published
-featured: true
+featured: false
 priority: 11
 date: 2026-07-01
 technologies: [PHP, MySQL, JavaScript, Bootstrap, Chart.js, MVC]
