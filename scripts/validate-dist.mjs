@@ -166,8 +166,8 @@ for (const locale of ['es', 'en']) {
     `Academic career areas are out of order in ${locale} catalog`,
   );
   assert(
-    matches(credentials, /data-credential-card/g) === 6,
-    `Expected 6 credential cards in ${locale} credential archive`,
+    matches(credentials, /data-credential-card/g) === 7,
+    `Expected 7 credential cards in ${locale} credential archive`,
   );
   assert(
     matches(credentials, /data-credential-category/g) === 4,

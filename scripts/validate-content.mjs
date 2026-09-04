@@ -192,7 +192,7 @@ for (const [translationKey, locales] of credentialPairs) {
   );
 }
 
-assert(credentialPairs.size === 6, `Expected 6 credential pairs, found ${credentialPairs.size}`);
+assert(credentialPairs.size === 7, `Expected 7 credential pairs, found ${credentialPairs.size}`);
 const secondarySchoolCredentials = credentials.filter(
   (entry) => field(entry.frontmatter, 'translationKey', entry.file) === 'coar-secondary-studies',
 );
@@ -211,7 +211,7 @@ assert(
 for (const locale of ['es', 'en']) {
   assert(
     credentialCategoriesByLocale[locale].school === 1 &&
-      credentialCategoriesByLocale[locale].university === 1 &&
+      credentialCategoriesByLocale[locale].university === 2 &&
       credentialCategoriesByLocale[locale].external === 2 &&
       credentialCategoriesByLocale[locale].achievement === 2,
     `Unexpected credential category distribution for ${locale}`,
