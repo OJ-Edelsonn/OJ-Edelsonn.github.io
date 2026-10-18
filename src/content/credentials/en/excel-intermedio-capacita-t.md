@@ -17,6 +17,6 @@ highlights:
 previewImage: /images/credentials/excel-intermedio-capacita-t.jpg
 previewAlt: Public excerpt from the Intermediate Excel certificate awarded to Edelson Anghuelo Orihuela Jara.
 privacyNote: The public excerpt preserves the main academic information while omitting signatures, the verification code, and QR code.
-priority: 4
+priority: 7
 draft: false
 ---

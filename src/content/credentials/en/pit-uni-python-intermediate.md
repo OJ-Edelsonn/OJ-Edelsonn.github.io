@@ -16,6 +16,6 @@ highlights:
 previewImage: /images/credentials/pit-uni-python-intermediate.webp
 previewAlt: Public excerpt from the Intermediate Python Programming certificate issued by the National University of Engineering.
 privacyNote: The excerpt omits the certificate number, QR code, and digital-signature metadata.
-priority: 3
+priority: 6
 draft: false
 ---

@@ -17,6 +17,6 @@ highlights:
 previewImage: /images/credentials/excel-intermedio-capacita-t.jpg
 previewAlt: Extracto público del certificado de Excel Intermedio otorgado a Edelson Anghuelo Orihuela Jara.
 privacyNote: El extracto público conserva la información académica principal y omite firmas, código y QR de verificación.
-priority: 4
+priority: 7
 draft: false
 ---

@@ -16,6 +16,6 @@ highlights:
 previewImage: /images/credentials/pit-uni-python-intermediate.webp
 previewAlt: Extracto público del certificado de Programación en Python Intermedio emitido por la Universidad Nacional de Ingeniería.
 privacyNote: El extracto omite número de certificado, código QR y metadatos de firma digital.
-priority: 3
+priority: 6
 draft: false
 ---
